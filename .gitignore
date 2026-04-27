@@ -1,0 +1,9 @@
+.codex
+node_modules/
+dist/
+coverage/
+.DS_Store
+*.log
+
+# Design-pack source material is local audit context and must not be committed.
+audits/kakegurui_zk_game_design_pack/
