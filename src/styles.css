@@ -201,6 +201,16 @@ pre {
     rgba(13, 17, 13, 0.78);
 }
 
+.goodDemo {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 34px;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 14% 20%, rgba(70, 111, 137, 0.2), transparent 20rem),
+    rgba(9, 14, 18, 0.78);
+}
+
 .labHeader {
   display: grid;
   grid-template-columns: 1fr 160px;
