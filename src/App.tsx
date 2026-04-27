@@ -2,6 +2,7 @@ import { useState } from "react";
 import { buildFoundationDemo } from "./demo";
 import { BallotRpsDemo } from "./ui/BallotRpsDemo";
 import { GambleLab } from "./ui/GambleLab";
+import { ZeroNimDemo } from "./ui/ZeroNimDemo";
 
 export default function App() {
   const [seed, setSeed] = useState("academy-gambit-phase-0");
@@ -70,6 +71,7 @@ export default function App() {
       </section>
 
       <BallotRpsDemo />
+      <ZeroNimDemo />
       <GambleLab />
     </main>
   );

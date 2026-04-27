@@ -7,6 +7,7 @@ The current implementation covers:
 - Phase 0 from roadmap issue #1: engineering skeleton and deterministic engine foundation.
 - Phase 1 from roadmap issue #1: normalized, runtime-safe gamble catalog and Gamble Lab UI.
 - Phase 2 from roadmap issue #1: playable Ballot RPS ruleset with committed votes, seeded draws, hidden play commit/reveal, NPC selection, settlement, and audit replay.
+- Phase 3 from roadmap issue #1: playable Zero Nim ruleset with betting, bust threshold, hidden card commit/reveal, risk-aware NPC decisions, and audit-only anomaly signals.
 
 ## IP and Compliance Boundary
 
@@ -41,8 +42,10 @@ Phase 0 establishes reusable engine primitives:
 - `src/gambles/catalog.ts`: catalog schema, validation, filtering, and runtime IP-safety checks.
 - `src/gambles/catalogData.ts`: original runtime catalog distilled from local audit research.
 - `src/gambles/ballotRps/`: first playable ruleset, NPC heuristic, typed actions, and deterministic demo runner.
+- `src/gambles/zeroNim/`: second playable ruleset with betting, bust logic, NPC risk heuristics, and anomaly telemetry.
 - `src/ui/GambleLab.tsx`: data-driven catalog browser for phase, complexity, readiness, and fairness priority.
 - `src/ui/BallotRpsDemo.tsx`: UI surface for the first playable match; rules and settlement remain in the ruleset.
+- `src/ui/ZeroNimDemo.tsx`: UI surface for the second playable match; betting and bust rules remain in the ruleset.
 
 The React UI in `src/App.tsx` displays foundation demo state and catalog data. It does not implement settlement or game rules.
 
@@ -61,4 +64,4 @@ The React UI in `src/App.tsx` displays foundation demo state and catalog data. I
 
 ## Next Interfaces
 
-Phase 3 should implement `zero-nim` with a betting layer, bust threshold, risk-aware NPC decisions, deterministic replay, and audit-only collusion signals.
+Phase 4 should implement `greater-good` as a five-player public-goods game with hidden contribution commitments, doubled common-pool distribution, elimination voting, NPC archetypes, and audit replay output.
