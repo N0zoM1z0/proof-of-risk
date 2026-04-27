@@ -11,6 +11,7 @@ The current implementation covers:
 - Phase 4 from roadmap issue #1: playable Greater Good public-goods ruleset with five-player hidden contributions, doubled common-pool distribution, elimination voting, archetype-driven NPCs, and audit replay.
 - Phase 5 from roadmap issue #1: shared NPC archetypes, difficulty policy, deterministic simulation metrics, and balance snapshot UI.
 - Phase 6 from roadmap issue #1: 2.5D visual vertical slice with academy map, perspective table, audit board, motion, responsive behavior, and UI smoke coverage.
+- Phase 7 from roadmap issue #1: standalone replay artifact verifier plus optional ZK POC target notes.
 
 ## IP and Compliance Boundary
 
@@ -24,6 +25,7 @@ The current implementation covers:
 npm install
 npm run dev
 npm run simulate
+npm run verify
 ```
 
 ## Verification
@@ -49,6 +51,8 @@ Phase 0 establishes reusable engine primitives:
 - `src/gambles/zeroNim/`: second playable ruleset with betting, bust logic, NPC risk heuristics, and anomaly telemetry.
 - `src/gambles/greaterGood/`: public-goods ruleset with contribution/vote commitments, distribution, elimination, and archetype heuristics.
 - `src/ai/`: shared NPC archetypes, difficulty policy, deterministic simulation summaries, and CLI simulation entrypoint.
+- `src/verify/`: replay artifact export, hash/log/commitment verifier, and CLI verifier.
+- `src/zk/proofTypes.ts`: optional ZK POC target metadata kept outside the normal runtime path.
 - `src/ui/GambleLab.tsx`: data-driven catalog browser for phase, complexity, readiness, and fairness priority.
 - `src/ui/BallotRpsDemo.tsx`: UI surface for the first playable match; rules and settlement remain in the ruleset.
 - `src/ui/ZeroNimDemo.tsx`: UI surface for the second playable match; betting and bust rules remain in the ruleset.
@@ -73,4 +77,4 @@ The React UI in `src/App.tsx` displays foundation demo state and catalog data. I
 
 ## Next Interfaces
 
-Phase 7 should add a standalone verifier for seeds, random logs, action logs, commitments, and settlement artifacts before introducing optional ZK proof tooling.
+Phase 8 should add expansion gamble rulesets, starting with all-pay vote auction and non-transitive dice because they exercise sealed bids and probability education without requiring a new rendering system.

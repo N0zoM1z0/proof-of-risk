@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "simulate": "tsx src/ai/simulate.ts",
+    "verify": "tsx src/verify/cli.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -17,6 +18,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@types/node": "^25.6.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
