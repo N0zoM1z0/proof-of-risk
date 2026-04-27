@@ -181,6 +181,16 @@ pre {
     rgba(12, 10, 8, 0.76);
 }
 
+.rpsDemo {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 34px;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 78% 8%, rgba(225, 185, 100, 0.16), transparent 18rem),
+    rgba(19, 14, 9, 0.78);
+}
+
 .labHeader {
   display: grid;
   grid-template-columns: 1fr 160px;
@@ -211,6 +221,48 @@ pre {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
   margin: 20px 0;
+}
+
+.compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.compact label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+}
+
+.rpsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.rpsGrid h3 {
+  margin-top: 0;
+}
+
+.moveCards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.moveCard {
+  min-width: 94px;
+  border: 1px solid rgba(225, 185, 100, 0.35);
+  border-radius: 16px;
+  padding: 18px 14px;
+  color: var(--muted);
+  text-align: center;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.moveCard.selected {
+  color: var(--deep);
+  border-color: var(--accent);
+  background: linear-gradient(145deg, #fff3d0, #d7a84d);
 }
 
 .filters label {
@@ -308,7 +360,9 @@ pre {
   .grid,
   .labHeader,
   .filters,
-  .labGrid {
+  .labGrid,
+  .rpsGrid,
+  .compact {
     grid-template-columns: 1fr;
   }
 

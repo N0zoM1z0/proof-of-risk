@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { buildFoundationDemo } from "./demo";
+import { BallotRpsDemo } from "./ui/BallotRpsDemo";
 import { GambleLab } from "./ui/GambleLab";
 
 export default function App() {
@@ -68,6 +69,7 @@ export default function App() {
         </article>
       </section>
 
+      <BallotRpsDemo />
       <GambleLab />
     </main>
   );

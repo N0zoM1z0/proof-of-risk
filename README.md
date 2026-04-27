@@ -6,6 +6,7 @@ The current implementation covers:
 
 - Phase 0 from roadmap issue #1: engineering skeleton and deterministic engine foundation.
 - Phase 1 from roadmap issue #1: normalized, runtime-safe gamble catalog and Gamble Lab UI.
+- Phase 2 from roadmap issue #1: playable Ballot RPS ruleset with committed votes, seeded draws, hidden play commit/reveal, NPC selection, settlement, and audit replay.
 
 ## IP and Compliance Boundary
 
@@ -39,7 +40,9 @@ Phase 0 establishes reusable engine primitives:
 - `src/engine/replay.ts`: replay envelopes and stable replay hashing.
 - `src/gambles/catalog.ts`: catalog schema, validation, filtering, and runtime IP-safety checks.
 - `src/gambles/catalogData.ts`: original runtime catalog distilled from local audit research.
+- `src/gambles/ballotRps/`: first playable ruleset, NPC heuristic, typed actions, and deterministic demo runner.
 - `src/ui/GambleLab.tsx`: data-driven catalog browser for phase, complexity, readiness, and fairness priority.
+- `src/ui/BallotRpsDemo.tsx`: UI surface for the first playable match; rules and settlement remain in the ruleset.
 
 The React UI in `src/App.tsx` displays foundation demo state and catalog data. It does not implement settlement or game rules.
 
@@ -58,4 +61,4 @@ The React UI in `src/App.tsx` displays foundation demo state and catalog data. I
 
 ## Next Interfaces
 
-Phase 2 should consume the engine primitives and catalog entry for `ballot-rps` without moving rule logic into UI components. The Vote RPS ruleset should use seeded card-pool draws, hidden play commitments, deterministic settlement, and audit replay output.
+Phase 3 should implement `zero-nim` with a betting layer, bust threshold, risk-aware NPC decisions, deterministic replay, and audit-only collusion signals.
