@@ -3,6 +3,7 @@ import { buildFoundationDemo } from "./demo";
 import { BallotRpsDemo } from "./ui/BallotRpsDemo";
 import { GambleLab } from "./ui/GambleLab";
 import { GreaterGoodDemo } from "./ui/GreaterGoodDemo";
+import { SimulationPanel } from "./ui/SimulationPanel";
 import { ZeroNimDemo } from "./ui/ZeroNimDemo";
 
 export default function App() {
@@ -74,6 +75,7 @@ export default function App() {
       <BallotRpsDemo />
       <ZeroNimDemo />
       <GreaterGoodDemo />
+      <SimulationPanel />
       <GambleLab />
     </main>
   );

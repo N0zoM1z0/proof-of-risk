@@ -9,6 +9,7 @@ The current implementation covers:
 - Phase 2 from roadmap issue #1: playable Ballot RPS ruleset with committed votes, seeded draws, hidden play commit/reveal, NPC selection, settlement, and audit replay.
 - Phase 3 from roadmap issue #1: playable Zero Nim ruleset with betting, bust threshold, hidden card commit/reveal, risk-aware NPC decisions, and audit-only anomaly signals.
 - Phase 4 from roadmap issue #1: playable Greater Good public-goods ruleset with five-player hidden contributions, doubled common-pool distribution, elimination voting, archetype-driven NPCs, and audit replay.
+- Phase 5 from roadmap issue #1: shared NPC archetypes, difficulty policy, deterministic simulation metrics, and balance snapshot UI.
 
 ## IP and Compliance Boundary
 
@@ -21,6 +22,7 @@ The current implementation covers:
 ```bash
 npm install
 npm run dev
+npm run simulate
 ```
 
 ## Verification
@@ -45,10 +47,12 @@ Phase 0 establishes reusable engine primitives:
 - `src/gambles/ballotRps/`: first playable ruleset, NPC heuristic, typed actions, and deterministic demo runner.
 - `src/gambles/zeroNim/`: second playable ruleset with betting, bust logic, NPC risk heuristics, and anomaly telemetry.
 - `src/gambles/greaterGood/`: public-goods ruleset with contribution/vote commitments, distribution, elimination, and archetype heuristics.
+- `src/ai/`: shared NPC archetypes, difficulty policy, deterministic simulation summaries, and CLI simulation entrypoint.
 - `src/ui/GambleLab.tsx`: data-driven catalog browser for phase, complexity, readiness, and fairness priority.
 - `src/ui/BallotRpsDemo.tsx`: UI surface for the first playable match; rules and settlement remain in the ruleset.
 - `src/ui/ZeroNimDemo.tsx`: UI surface for the second playable match; betting and bust rules remain in the ruleset.
 - `src/ui/GreaterGoodDemo.tsx`: UI surface for the public-goods match; contribution, voting, and settlement rules remain in the ruleset.
+- `src/ui/SimulationPanel.tsx`: UI snapshot for deterministic balance metrics.
 
 The React UI in `src/App.tsx` displays foundation demo state and catalog data. It does not implement settlement or game rules.
 
@@ -67,4 +71,4 @@ The React UI in `src/App.tsx` displays foundation demo state and catalog data. I
 
 ## Next Interfaces
 
-Phase 5 should extract and harden shared NPC archetypes, difficulty modifiers, deterministic simulation scripts, and strategy metrics across implemented games.
+Phase 6 should focus on the 2.5D visual vertical slice: stronger academy-map framing, perspective tables, motion, responsive polish, keyboard-safe controls, and UI smoke coverage.
