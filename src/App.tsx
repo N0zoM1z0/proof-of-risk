@@ -4,6 +4,7 @@ import { BallotRpsDemo } from "./ui/BallotRpsDemo";
 import { GambleLab } from "./ui/GambleLab";
 import { GreaterGoodDemo } from "./ui/GreaterGoodDemo";
 import { SimulationPanel } from "./ui/SimulationPanel";
+import { VisualSlice } from "./ui/VisualSlice";
 import { ZeroNimDemo } from "./ui/ZeroNimDemo";
 
 export default function App() {
@@ -72,6 +73,7 @@ export default function App() {
         </article>
       </section>
 
+      <VisualSlice />
       <BallotRpsDemo />
       <ZeroNimDemo />
       <GreaterGoodDemo />

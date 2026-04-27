@@ -26,6 +26,27 @@ body {
     linear-gradient(145deg, #120f0a 0%, #24130f 48%, #0c0a08 100%);
 }
 
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardPulse {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--tilt));
+  }
+  50% {
+    transform: translateY(-8px) rotate(var(--tilt));
+  }
+}
+
 button,
 input {
   font: inherit;
@@ -85,6 +106,7 @@ p {
   padding: 24px;
   background: linear-gradient(180deg, var(--panel), rgba(16, 12, 9, 0.92));
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+  animation: floatIn 0.5s ease both;
 }
 
 .seedPanel {
@@ -219,6 +241,175 @@ pre {
   background:
     linear-gradient(140deg, rgba(146, 98, 56, 0.2), transparent 28rem),
     rgba(18, 12, 9, 0.78);
+}
+
+.visualSlice {
+  margin: 18px 0;
+  border: 1px solid var(--line);
+  border-radius: 36px;
+  padding: 24px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(225, 185, 100, 0.2), transparent 22rem),
+    linear-gradient(145deg, rgba(37, 24, 16, 0.92), rgba(8, 11, 13, 0.86));
+}
+
+.visualCopy {
+  max-width: 760px;
+}
+
+.visualGrid {
+  display: grid;
+  grid-template-columns: 260px 1fr 280px;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.academyMap {
+  display: grid;
+  gap: 12px;
+}
+
+.roomNode {
+  border: 1px solid rgba(225, 185, 100, 0.3);
+  border-radius: 18px;
+  padding: 16px;
+  color: var(--ink);
+  text-align: left;
+  background: rgba(255, 255, 255, 0.05);
+  transform: skewY(-2deg);
+  cursor: pointer;
+}
+
+.roomNode:focus-visible,
+.catalogItem:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.roomNode strong,
+.roomNode span {
+  display: block;
+  transform: skewY(2deg);
+}
+
+.roomNode span {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.tableStage {
+  position: relative;
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  perspective: 900px;
+}
+
+.riskTable {
+  position: relative;
+  width: min(92%, 560px);
+  height: 300px;
+  border: 14px solid #6f4c2c;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, #394433 0%, #182018 62%, #0b0d0a 100%);
+  box-shadow: 0 60px 110px rgba(0, 0, 0, 0.55);
+  transform: rotateX(58deg) rotateZ(-2deg);
+}
+
+.tableGlow {
+  position: absolute;
+  width: 64%;
+  height: 44px;
+  bottom: 30px;
+  border-radius: 50%;
+  background: rgba(225, 185, 100, 0.18);
+  filter: blur(18px);
+}
+
+.tableCard {
+  --tilt: -6deg;
+  position: absolute;
+  display: grid;
+  width: 70px;
+  height: 104px;
+  place-items: center;
+  border: 1px solid rgba(65, 37, 12, 0.4);
+  border-radius: 12px;
+  color: var(--deep);
+  background: linear-gradient(145deg, #fff4d8, #d2a24a);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+  animation: cardPulse 2.8s ease-in-out infinite;
+}
+
+.cardA {
+  left: 34%;
+  top: 34%;
+}
+
+.cardB {
+  --tilt: 7deg;
+  left: 48%;
+  top: 32%;
+  animation-delay: 0.2s;
+}
+
+.cardC {
+  --tilt: 14deg;
+  left: 61%;
+  top: 36%;
+  animation-delay: 0.4s;
+}
+
+.chipStack {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 5px double #2c1908;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.chipA {
+  left: 30%;
+  top: 58%;
+}
+
+.chipB {
+  left: 67%;
+  top: 55%;
+}
+
+.auditBoard {
+  border: 1px solid rgba(225, 185, 100, 0.28);
+  border-radius: 24px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.auditBoard h3 {
+  margin-top: 0;
+}
+
+.auditBoard ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.auditBoard li {
+  display: grid;
+  gap: 4px;
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+}
+
+.auditBoard span {
+  color: var(--muted);
 }
 
 .labHeader {
@@ -392,8 +583,13 @@ pre {
   .filters,
   .labGrid,
   .rpsGrid,
-  .compact {
+  .compact,
+  .visualGrid {
     grid-template-columns: 1fr;
+  }
+
+  .tableStage {
+    min-height: 280px;
   }
 
   .wide {
@@ -406,5 +602,15 @@ pre {
 
   .drawList {
     flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
   }
 }

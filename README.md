@@ -10,6 +10,7 @@ The current implementation covers:
 - Phase 3 from roadmap issue #1: playable Zero Nim ruleset with betting, bust threshold, hidden card commit/reveal, risk-aware NPC decisions, and audit-only anomaly signals.
 - Phase 4 from roadmap issue #1: playable Greater Good public-goods ruleset with five-player hidden contributions, doubled common-pool distribution, elimination voting, archetype-driven NPCs, and audit replay.
 - Phase 5 from roadmap issue #1: shared NPC archetypes, difficulty policy, deterministic simulation metrics, and balance snapshot UI.
+- Phase 6 from roadmap issue #1: 2.5D visual vertical slice with academy map, perspective table, audit board, motion, responsive behavior, and UI smoke coverage.
 
 ## IP and Compliance Boundary
 
@@ -53,6 +54,7 @@ Phase 0 establishes reusable engine primitives:
 - `src/ui/ZeroNimDemo.tsx`: UI surface for the second playable match; betting and bust rules remain in the ruleset.
 - `src/ui/GreaterGoodDemo.tsx`: UI surface for the public-goods match; contribution, voting, and settlement rules remain in the ruleset.
 - `src/ui/SimulationPanel.tsx`: UI snapshot for deterministic balance metrics.
+- `src/ui/VisualSlice.tsx`: native 2.5D visual frame for academy map, table, chip/card motion, and audit board.
 
 The React UI in `src/App.tsx` displays foundation demo state and catalog data. It does not implement settlement or game rules.
 
@@ -71,4 +73,4 @@ The React UI in `src/App.tsx` displays foundation demo state and catalog data. I
 
 ## Next Interfaces
 
-Phase 6 should focus on the 2.5D visual vertical slice: stronger academy-map framing, perspective tables, motion, responsive polish, keyboard-safe controls, and UI smoke coverage.
+Phase 7 should add a standalone verifier for seeds, random logs, action logs, commitments, and settlement artifacts before introducing optional ZK proof tooling.
