@@ -13,6 +13,7 @@ The current implementation covers:
 - Phase 6 from roadmap issue #1: 2.5D visual vertical slice with academy map, perspective table, audit board, motion, responsive behavior, and UI smoke coverage.
 - Phase 7 from roadmap issue #1: standalone replay artifact verifier plus optional ZK POC target notes.
 - Phase 8 from roadmap issue #1: expansion ruleset slices for all-pay vote auction and non-transitive dice.
+- Phase 9 from roadmap issue #1: regression replay fixtures, release report, compliance notes, and final packaging checks.
 
 ## IP and Compliance Boundary
 
@@ -27,6 +28,7 @@ npm install
 npm run dev
 npm run simulate
 npm run verify
+npm run release:check
 ```
 
 ## Verification
@@ -56,6 +58,9 @@ Phase 0 establishes reusable engine primitives:
 - `src/ai/`: shared NPC archetypes, difficulty policy, deterministic simulation summaries, and CLI simulation entrypoint.
 - `src/verify/`: replay artifact export, hash/log/commitment verifier, and CLI verifier.
 - `src/zk/proofTypes.ts`: optional ZK POC target metadata kept outside the normal runtime path.
+- `src/release/`: release report generator and CLI checks.
+- `fixtures/replays/manifest.json`: stable replay hashes for regression checks.
+- `docs/release.md` and `docs/compliance.md`: release scope, known limitations, and virtual-game compliance boundary.
 - `src/ui/GambleLab.tsx`: data-driven catalog browser for phase, complexity, readiness, and fairness priority.
 - `src/ui/BallotRpsDemo.tsx`: UI surface for the first playable match; rules and settlement remain in the ruleset.
 - `src/ui/ZeroNimDemo.tsx`: UI surface for the second playable match; betting and bust rules remain in the ruleset.
@@ -81,4 +86,4 @@ The React UI in `src/App.tsx` displays foundation demo state and catalog data. I
 
 ## Next Interfaces
 
-Phase 9 should add regression replay fixtures, deterministic balance reports, release documentation, and final packaging checks.
+Next work should move from MVP scaffolding to hardening: full ruleset re-execution in the verifier, browser interaction tests, multiplayer room protocol, and deeper balance tuning.

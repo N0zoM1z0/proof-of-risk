@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "seed": "fixture-v1",
+  "artifacts": [
+    {
+      "gameId": "ballot-rps-demo",
+      "rulesetId": "ballot-rps.v1",
+      "replayHash": "d58781da071cd5f8299d2e3aa4f6ac022c428d5a28add4c44ba74c2d40d427ab"
+    },
+    {
+      "gameId": "zero-nim-demo",
+      "rulesetId": "zero-nim.v1",
+      "replayHash": "ea58c5684a886704c744fc4fdec01d4a3639351533216a7d145fc5a3aed400d0"
+    },
+    {
+      "gameId": "greater-good-demo",
+      "rulesetId": "greater-good.v1",
+      "replayHash": "61fb5afb301d4aaf078e8fe00a986b15387bc4347cb54b259882494beeab3589"
+    }
+  ]
+}

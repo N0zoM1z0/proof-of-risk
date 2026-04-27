@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "simulate": "tsx src/ai/simulate.ts",
     "verify": "tsx src/verify/cli.ts",
+    "release:check": "tsx src/release/cli.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
