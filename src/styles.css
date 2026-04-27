@@ -243,6 +243,16 @@ pre {
     rgba(18, 12, 9, 0.78);
 }
 
+.expansionDemo {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 34px;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 80% 20%, rgba(110, 83, 176, 0.18), transparent 20rem),
+    rgba(12, 10, 20, 0.78);
+}
+
 .visualSlice {
   margin: 18px 0;
   border: 1px solid var(--line);

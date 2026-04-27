@@ -12,6 +12,7 @@ The current implementation covers:
 - Phase 5 from roadmap issue #1: shared NPC archetypes, difficulty policy, deterministic simulation metrics, and balance snapshot UI.
 - Phase 6 from roadmap issue #1: 2.5D visual vertical slice with academy map, perspective table, audit board, motion, responsive behavior, and UI smoke coverage.
 - Phase 7 from roadmap issue #1: standalone replay artifact verifier plus optional ZK POC target notes.
+- Phase 8 from roadmap issue #1: expansion ruleset slices for all-pay vote auction and non-transitive dice.
 
 ## IP and Compliance Boundary
 
@@ -50,6 +51,8 @@ Phase 0 establishes reusable engine primitives:
 - `src/gambles/ballotRps/`: first playable ruleset, NPC heuristic, typed actions, and deterministic demo runner.
 - `src/gambles/zeroNim/`: second playable ruleset with betting, bust logic, NPC risk heuristics, and anomaly telemetry.
 - `src/gambles/greaterGood/`: public-goods ruleset with contribution/vote commitments, distribution, elimination, and archetype heuristics.
+- `src/gambles/allPayAuction/`: sealed-bid all-pay vote auction demo with commit/reveal bids.
+- `src/gambles/nontransitiveDice/`: probability tutorial for counter-pick dice dominance cycles.
 - `src/ai/`: shared NPC archetypes, difficulty policy, deterministic simulation summaries, and CLI simulation entrypoint.
 - `src/verify/`: replay artifact export, hash/log/commitment verifier, and CLI verifier.
 - `src/zk/proofTypes.ts`: optional ZK POC target metadata kept outside the normal runtime path.
@@ -59,6 +62,7 @@ Phase 0 establishes reusable engine primitives:
 - `src/ui/GreaterGoodDemo.tsx`: UI surface for the public-goods match; contribution, voting, and settlement rules remain in the ruleset.
 - `src/ui/SimulationPanel.tsx`: UI snapshot for deterministic balance metrics.
 - `src/ui/VisualSlice.tsx`: native 2.5D visual frame for academy map, table, chip/card motion, and audit board.
+- `src/ui/ExpansionDemo.tsx`: UI surface for Phase 8 auction and dice tutorial slices.
 
 The React UI in `src/App.tsx` displays foundation demo state and catalog data. It does not implement settlement or game rules.
 
@@ -77,4 +81,4 @@ The React UI in `src/App.tsx` displays foundation demo state and catalog data. I
 
 ## Next Interfaces
 
-Phase 8 should add expansion gamble rulesets, starting with all-pay vote auction and non-transitive dice because they exercise sealed bids and probability education without requiring a new rendering system.
+Phase 9 should add regression replay fixtures, deterministic balance reports, release documentation, and final packaging checks.

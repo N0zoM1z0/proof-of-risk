@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { buildFoundationDemo } from "./demo";
 import { BallotRpsDemo } from "./ui/BallotRpsDemo";
+import { ExpansionDemo } from "./ui/ExpansionDemo";
 import { GambleLab } from "./ui/GambleLab";
 import { GreaterGoodDemo } from "./ui/GreaterGoodDemo";
 import { SimulationPanel } from "./ui/SimulationPanel";
@@ -78,6 +79,7 @@ export default function App() {
       <ZeroNimDemo />
       <GreaterGoodDemo />
       <SimulationPanel />
+      <ExpansionDemo />
       <GambleLab />
     </main>
   );
