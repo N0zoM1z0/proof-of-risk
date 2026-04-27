@@ -47,6 +47,49 @@ describe("zero Nim ruleset", () => {
     expect(rejected.errors).toContain("It is not this player's betting turn");
   });
 
+  it("rejects call when there is no open bet", () => {
+    const rng = new DeterministicRng("call-test");
+    const state = zeroNimRuleset.init(
+      {
+        gameId: "call-test",
+        seed: "call-test",
+        players: ["p1", "p2"]
+      },
+      rng
+    );
+
+    const rejected = zeroNimRuleset.applyAction(
+      state,
+      { type: "BET", playerId: "p1", payload: { kind: "call" } },
+      rng
+    );
+
+    expect(rejected.accepted).toBe(false);
+    expect(rejected.errors).toContain("Cannot call when there is no open bet");
+  });
+
+  it("settles immediately when a player folds", () => {
+    const rng = new DeterministicRng("fold-test");
+    const state = zeroNimRuleset.init(
+      {
+        gameId: "fold-test",
+        seed: "fold-test",
+        players: ["p1", "p2"]
+      },
+      rng
+    );
+
+    const folded = zeroNimRuleset.applyAction(
+      state,
+      { type: "BET", playerId: "p1", payload: { kind: "fold" } },
+      rng
+    );
+
+    expect(folded.accepted).toBe(true);
+    expect(folded.state.phase).toBe("settled");
+    expect(folded.state.publicState.result?.winnerIds).toEqual(["p2"]);
+  });
+
   it("rejects card reveals outside the active hand", () => {
     const rng = new DeterministicRng("card-test");
     let state = zeroNimRuleset.init(

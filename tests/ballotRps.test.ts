@@ -89,11 +89,84 @@ describe("ballot RPS ruleset", () => {
   });
 
   it("rejects reveal data that does not match a commitment", () => {
-    const demo = runBallotRpsDemo("commitment-seed", "paper");
-    const terminal = ballotRpsRuleset.isTerminal(demo.state);
+    const rng = new DeterministicRng("vote-mismatch");
+    let state = ballotRpsRuleset.init(
+      {
+        gameId: "vote-mismatch",
+        seed: "vote-mismatch",
+        players: ["p1", "p2"],
+        voters: ["v1", "v2", "v3", "v4", "v5", "v6"]
+      },
+      rng
+    );
+    state = applyAccepted(state, rng, {
+      type: "COMMIT_VOTE",
+      playerId: "v1",
+      payload: {
+        voterId: "v1",
+        commitment: makeBallotRpsCommitment(state.gameId, 0, "v1", "rock", "salt")
+      }
+    });
 
-    expect(terminal).toBe(true);
-    expect(demo.state.commitments.every((commitment) => commitment.status === "revealed")).toBe(true);
+    const rejected = ballotRpsRuleset.applyAction(
+      state,
+      {
+        type: "REVEAL_VOTE",
+        playerId: "v1",
+        payload: { voterId: "v1", choice: "paper", salt: "salt" }
+      },
+      rng
+    );
+
+    expect(rejected.accepted).toBe(false);
+    expect(rejected.errors).toContain("Vote reveal does not match commitment");
+  });
+
+  it("rejects duplicate vote commitments", () => {
+    const rng = new DeterministicRng("duplicate-vote");
+    let state = ballotRpsRuleset.init(
+      {
+        gameId: "duplicate-vote",
+        seed: "duplicate-vote",
+        players: ["p1", "p2"],
+        voters: ["v1", "v2", "v3", "v4", "v5", "v6"]
+      },
+      rng
+    );
+    state = applyAccepted(state, rng, {
+      type: "COMMIT_VOTE",
+      playerId: "v1",
+      payload: {
+        voterId: "v1",
+        commitment: makeBallotRpsCommitment(state.gameId, 0, "v1", "rock", "salt")
+      }
+    });
+    const duplicate = ballotRpsRuleset.applyAction(
+      state,
+      {
+        type: "COMMIT_VOTE",
+        playerId: "v1",
+        payload: {
+          voterId: "v1",
+          commitment: makeBallotRpsCommitment(state.gameId, 0, "v1", "paper", "salt-2")
+        }
+      },
+      rng
+    );
+
+    expect(duplicate.accepted).toBe(false);
+    expect(duplicate.errors).toContain("Voter already committed");
+  });
+
+  it("only exposes the viewer hand in public view", () => {
+    const demo = runBallotRpsDemo("public-view", "paper");
+    const publicView = ballotRpsRuleset.getPublicView(demo.state, "player:auditor") as {
+      viewerHand: string[];
+      publicState: { players: string[] };
+    };
+
+    expect(publicView.viewerHand).toEqual(demo.humanHand);
+    expect(publicView.publicState.players).toEqual(["player:auditor", "npc:calculator"]);
   });
 });
 

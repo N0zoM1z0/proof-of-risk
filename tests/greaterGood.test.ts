@@ -3,7 +3,8 @@ import { DeterministicRng } from "../src/engine/rng";
 import { runGreaterGoodDemo } from "../src/gambles/greaterGood/demo";
 import {
   greaterGoodRuleset,
-  makeGreaterGoodContributionCommitment
+  makeGreaterGoodContributionCommitment,
+  makeGreaterGoodVoteCommitment
 } from "../src/gambles/greaterGood/ruleset";
 import type { GreaterGoodAction, GreaterGoodState } from "../src/gambles/greaterGood/types";
 
@@ -73,7 +74,77 @@ describe("greater Good ruleset", () => {
     const demo = runGreaterGoodDemo("vote-baseline");
     expect(demo.state.publicState.eliminatedPlayers).not.toContain("player:auditor");
   });
+
+  it("rejects self elimination votes", () => {
+    const rng = new DeterministicRng("self-vote");
+    let state = advanceToVoteCommit(rng, "self-vote");
+    for (const playerId of state.publicState.alivePlayers) {
+      const targetId = "p1";
+      state = applyAccepted(state, rng, {
+        type: "COMMIT_VOTE",
+        playerId,
+        payload: {
+          commitment: makeGreaterGoodVoteCommitment(
+            state.gameId,
+            state.publicState.round,
+            playerId,
+            targetId,
+            `vote-${playerId}`
+          )
+        }
+      });
+    }
+
+    const rejected = greaterGoodRuleset.applyAction(
+      state,
+      {
+        type: "REVEAL_VOTE",
+        playerId: "p1",
+        payload: { targetId: "p1", salt: "vote-p1" }
+      },
+      rng
+    );
+
+    expect(rejected.accepted).toBe(false);
+    expect(rejected.errors).toContain("Players cannot vote for themselves");
+  });
 });
+
+function advanceToVoteCommit(rng: DeterministicRng, seed: string): GreaterGoodState {
+  let state = greaterGoodRuleset.init(
+    {
+      gameId: seed,
+      seed,
+      players: ["p1", "p2", "p3", "p4", "p5"],
+      maxRounds: 1
+    },
+    rng
+  );
+  for (const playerId of state.publicState.alivePlayers) {
+    state = applyAccepted(state, rng, {
+      type: "COMMIT_CONTRIBUTION",
+      playerId,
+      payload: {
+        commitment: makeGreaterGoodContributionCommitment(
+          state.gameId,
+          state.publicState.round,
+          playerId,
+          { tax: 3, personal: 2 },
+          `contribution-${playerId}`
+        )
+      }
+    });
+  }
+  for (const playerId of state.publicState.alivePlayers) {
+    state = applyAccepted(state, rng, {
+      type: "REVEAL_CONTRIBUTION",
+      playerId,
+      payload: { tax: 3, personal: 2, salt: `contribution-${playerId}` }
+    });
+  }
+  expect(state.phase).toBe("voteCommit");
+  return state;
+}
 
 function applyAccepted(
   state: GreaterGoodState,

@@ -27,4 +27,22 @@ describe("standalone replay verifier", () => {
     expect(report.issues.map((issue) => issue.code)).toContain("REPLAY_HASH_MISMATCH");
     expect(report.issues.map((issue) => issue.code)).toContain("ACTION_LOG_HASH");
   });
+
+  it("rejects tampered random log seeds", () => {
+    const artifact = exportDemoArtifacts("random-tamper-seed")[0];
+    if (!artifact) {
+      throw new Error("missing artifact");
+    }
+    const tampered = {
+      ...artifact,
+      randomLog: artifact.randomLog.map((record, index) =>
+        index === 0 ? { ...record, seed: "attacker-seed" } : record
+      )
+    };
+    const report = verifyReplayArtifact(tampered);
+
+    expect(report.ok).toBe(false);
+    expect(report.issues.map((issue) => issue.code)).toContain("REPLAY_HASH_MISMATCH");
+    expect(report.issues.map((issue) => issue.code)).toContain("RANDOM_LOG_SEED");
+  });
 });

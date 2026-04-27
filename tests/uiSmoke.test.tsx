@@ -19,6 +19,7 @@ describe("UI smoke coverage", () => {
     expect(html).toContain("Zero Nim");
     expect(html).toContain("Greater Good");
     expect(html).toContain("Deterministic simulation snapshot");
+    expect(html).toContain("Auction and probability tutorials");
     expect(html).toContain("Gamble Lab");
   });
 });
