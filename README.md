@@ -2,7 +2,10 @@
 
 `Proof of Risk: Academy Gambit` is an original strategy-game MVP about deterministic risk games, replayable audit evidence, and verifiable fairness primitives.
 
-The current implementation is Phase 0 from the roadmap in issue #1: engineering skeleton and deterministic engine foundation.
+The current implementation covers:
+
+- Phase 0 from roadmap issue #1: engineering skeleton and deterministic engine foundation.
+- Phase 1 from roadmap issue #1: normalized, runtime-safe gamble catalog and Gamble Lab UI.
 
 ## IP and Compliance Boundary
 
@@ -34,8 +37,11 @@ Phase 0 establishes reusable engine primitives:
 - `src/engine/commitments.ts`: canonical commit/reveal helpers for hidden choices.
 - `src/engine/audit.ts`: fairness and anomaly report types.
 - `src/engine/replay.ts`: replay envelopes and stable replay hashing.
+- `src/gambles/catalog.ts`: catalog schema, validation, filtering, and runtime IP-safety checks.
+- `src/gambles/catalogData.ts`: original runtime catalog distilled from local audit research.
+- `src/ui/GambleLab.tsx`: data-driven catalog browser for phase, complexity, readiness, and fairness priority.
 
-The React UI in `src/App.tsx` only displays a Phase 0 foundation demo from `src/demo.ts`. It does not implement settlement or game rules.
+The React UI in `src/App.tsx` displays foundation demo state and catalog data. It does not implement settlement or game rules.
 
 ## Determinism Contract
 
@@ -52,4 +58,4 @@ The React UI in `src/App.tsx` only displays a Phase 0 foundation demo from `src/
 
 ## Next Interfaces
 
-Phase 1 should consume the engine primitives without moving rule logic into UI components. Catalog data should be normalized into original runtime names before display.
+Phase 2 should consume the engine primitives and catalog entry for `ballot-rps` without moving rule logic into UI components. The Vote RPS ruleset should use seeded card-pool draws, hidden play commitments, deterministic settlement, and audit replay output.

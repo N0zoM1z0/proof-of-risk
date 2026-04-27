@@ -104,6 +104,15 @@ input {
   background: rgba(0, 0, 0, 0.26);
 }
 
+select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 12px 14px;
+  color: var(--ink);
+  background: #1d150f;
+}
+
 .wide {
   grid-column: span 2;
 }
@@ -162,9 +171,144 @@ pre {
   background: rgba(0, 0, 0, 0.35);
 }
 
+.lab {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 34px;
+  padding: 24px;
+  background:
+    linear-gradient(135deg, rgba(225, 185, 100, 0.1), transparent 30%),
+    rgba(12, 10, 8, 0.76);
+}
+
+.labHeader {
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  gap: 18px;
+  align-items: start;
+}
+
+.metricCard {
+  display: grid;
+  place-items: center;
+  min-height: 120px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: rgba(0, 0, 0, 0.24);
+}
+
+.metricCard strong {
+  font-size: 3rem;
+  line-height: 0.9;
+}
+
+.metricCard span {
+  color: var(--muted);
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.filters label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+}
+
+.filters input[type="range"] {
+  accent-color: var(--accent);
+  padding: 0;
+}
+
+.labGrid {
+  display: grid;
+  grid-template-columns: minmax(260px, 360px) 1fr;
+  gap: 18px;
+}
+
+.catalogList {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  max-height: 680px;
+  overflow: auto;
+}
+
+.catalogItem {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  border: 1px solid rgba(225, 185, 100, 0.22);
+  border-radius: 18px;
+  padding: 14px;
+  color: var(--ink);
+  text-align: left;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+
+.catalogItem.active {
+  border-color: var(--accent);
+  background: rgba(225, 185, 100, 0.16);
+}
+
+.catalogItem small {
+  color: var(--muted);
+}
+
+.catalogDetail {
+  min-height: 520px;
+  border: 1px solid rgba(225, 185, 100, 0.24);
+  border-radius: 24px;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.catalogDetail h3 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 0.95;
+}
+
+.detailFacts {
+  display: grid;
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.detailFacts div {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 14px;
+}
+
+.catalogBullets {
+  margin-top: 18px;
+}
+
+.catalogBullets h4 {
+  margin: 0 0 8px;
+  color: var(--accent);
+}
+
+.catalogBullets ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
 @media (max-width: 760px) {
   .seedPanel,
-  .grid {
+  .grid,
+  .labHeader,
+  .filters,
+  .labGrid {
     grid-template-columns: 1fr;
   }
 

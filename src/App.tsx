@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { buildFoundationDemo } from "./demo";
+import { GambleLab } from "./ui/GambleLab";
 
 export default function App() {
   const [seed, setSeed] = useState("academy-gambit-phase-0");
@@ -66,6 +67,8 @@ export default function App() {
           <pre>{JSON.stringify(demo.actionLog, null, 2)}</pre>
         </article>
       </section>
+
+      <GambleLab />
     </main>
   );
 }
