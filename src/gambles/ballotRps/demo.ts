@@ -18,6 +18,7 @@ const voterChoices: RpsMove[] = [
 
 export function runBallotRpsDemo(seed: string, requestedHumanMove: RpsMove) {
   const rng = new DeterministicRng(seed);
+  const aiRng = new DeterministicRng(`${seed}:ai`);
   const voters = voterChoices.map((_, index) => `voter:${index + 1}`);
   let state = ballotRpsRuleset.init(
     {
@@ -62,7 +63,7 @@ export function runBallotRpsDemo(seed: string, requestedHumanMove: RpsMove) {
   const humanHand = state.privateStateByPlayer[players[0]]?.hand ?? [];
   const npcHand = state.privateStateByPlayer[players[1]]?.hand ?? [];
   const humanMove = humanHand.includes(requestedHumanMove) ? requestedHumanMove : humanHand[0] ?? "rock";
-  const npcMove = chooseBallotRpsNpcMove(npcHand, state.publicState.voteCounts, rng);
+  const npcMove = chooseBallotRpsNpcMove(npcHand, state.publicState.voteCounts, aiRng);
   const humanSalt = `play-salt:${seed}:human`;
   const npcSalt = `play-salt:${seed}:npc`;
 

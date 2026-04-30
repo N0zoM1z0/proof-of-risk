@@ -5,7 +5,7 @@
     {
       "gameId": "ballot-rps-demo",
       "rulesetId": "ballot-rps.v1",
-      "replayHash": "d58781da071cd5f8299d2e3aa4f6ac022c428d5a28add4c44ba74c2d40d427ab"
+      "replayHash": "6c70dd78d824242d7e54558a1fb028ad493167df7b857e362c74e08998c2a006"
     },
     {
       "gameId": "zero-nim-demo",
@@ -15,7 +15,7 @@
     {
       "gameId": "greater-good-demo",
       "rulesetId": "greater-good.v1",
-      "replayHash": "61fb5afb301d4aaf078e8fe00a986b15387bc4347cb54b259882494beeab3589"
+      "replayHash": "7def5e8db4b4cea21c8b9ee00ecf772d7e7f1359ec5159547e0eb5dde625fee4"
     }
   ]
 }

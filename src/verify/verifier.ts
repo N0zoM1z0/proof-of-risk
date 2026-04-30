@@ -16,7 +16,7 @@ export type VerificationReport = {
 
 export function verifyReplayArtifact(artifact: ReplayArtifact): VerificationReport {
   const issues: VerificationIssue[] = [];
-  const { expectedReplayHash, ...envelope } = artifact;
+  const { expectedReplayHash, genesisConfig: _genesisConfig, ...envelope } = artifact;
   const replayHash = computeReplayHash(envelope);
 
   if (replayHash !== expectedReplayHash) {

@@ -7,6 +7,7 @@ const players = ["player:auditor", "npc:risk"] as const;
 
 export function runZeroNimDemo(seed: string, preferredCard: NimCard) {
   const rng = new DeterministicRng(seed);
+  const aiRng = new DeterministicRng(`${seed}:ai`);
   let state = zeroNimRuleset.init(
     {
       gameId: "zero-nim-demo",
@@ -35,7 +36,7 @@ export function runZeroNimDemo(seed: string, preferredCard: NimCard) {
       const card =
         playerId === players[0] && hand.includes(preferredCard)
           ? preferredCard
-          : chooseZeroNimCard(hand, state.publicState.total, state.publicState.threshold, rng);
+          : chooseZeroNimCard(hand, state.publicState.total, state.publicState.threshold, aiRng);
       const salt = `zero-nim:${seed}:${state.publicState.round}:${playerId}`;
       state = applyOrThrow(
         state,

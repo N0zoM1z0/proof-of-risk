@@ -5,23 +5,28 @@ import { createReplayEnvelope, computeReplayHash, type ReplayEnvelope } from "..
 import type { ActionRecord } from "../engine/actionLog";
 import type { CommitmentRecord } from "../engine/commitments";
 import type { RandomRecord } from "../engine/rng";
+import type { RulesetConfig } from "../engine/stateMachine";
 
 export type ReplayArtifact = ReplayEnvelope & {
   expectedReplayHash: string;
+  genesisConfig: RulesetConfig;
 };
 
 export function createReplayArtifact(input: {
   gameId: string;
   rulesetId: string;
   seed: string;
+  genesisConfig: RulesetConfig;
   actionLog: readonly ActionRecord[];
   randomLog: readonly RandomRecord[];
   commitments: readonly CommitmentRecord[];
   settlementHash?: string;
 }): ReplayArtifact {
-  const envelope = createReplayEnvelope(input);
+  const { genesisConfig, ...replayInput } = input;
+  const envelope = createReplayEnvelope(replayInput);
   return {
     ...envelope,
+    genesisConfig,
     expectedReplayHash: computeReplayHash(envelope)
   };
 }
@@ -35,6 +40,12 @@ export function exportDemoArtifacts(seed: string): ReplayArtifact[] {
       gameId: ballot.gameId,
       rulesetId: ballot.rulesetId,
       seed,
+      genesisConfig: {
+        gameId: ballot.gameId,
+        seed,
+        players: ballot.publicState.players,
+        voters: ballot.publicState.voters
+      },
       actionLog: ballot.actionLog,
       randomLog: ballot.randomLog,
       commitments: ballot.commitments,
@@ -44,6 +55,13 @@ export function exportDemoArtifacts(seed: string): ReplayArtifact[] {
       gameId: nim.gameId,
       rulesetId: nim.rulesetId,
       seed,
+      genesisConfig: {
+        gameId: nim.gameId,
+        seed,
+        players: nim.publicState.players,
+        threshold: nim.publicState.threshold,
+        handSize: 4
+      },
       actionLog: nim.actionLog,
       randomLog: nim.randomLog,
       commitments: nim.commitments,
@@ -53,6 +71,14 @@ export function exportDemoArtifacts(seed: string): ReplayArtifact[] {
       gameId: good.gameId,
       rulesetId: good.rulesetId,
       seed,
+      genesisConfig: {
+        gameId: good.gameId,
+        seed,
+        players: good.publicState.players,
+        maxRounds: good.publicState.maxRounds,
+        coinsPerRound: good.publicState.coinsPerRound,
+        archetypes: good.publicState.archetypes
+      },
       actionLog: good.actionLog,
       randomLog: good.randomLog,
       commitments: good.commitments,

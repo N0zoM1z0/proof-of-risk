@@ -11,6 +11,7 @@ const players = ["player:auditor", "npc:defector", "npc:dominator", "npc:coopera
 
 export function runGreaterGoodDemo(seed: string) {
   const rng = new DeterministicRng(seed);
+  const aiRng = new DeterministicRng(`${seed}:ai`);
   let state = greaterGoodRuleset.init(
     {
       gameId: "greater-good-demo",
@@ -31,7 +32,7 @@ export function runGreaterGoodDemo(seed: string) {
           state.publicState.archetypes[playerId] ?? "cooperator",
           state.publicState.round,
           state.publicState.coinsPerRound,
-          rng
+          aiRng
         );
         plannedContributions.set(playerId, contribution);
         const salt = contributionSalt(seed, state.publicState.round, playerId);
