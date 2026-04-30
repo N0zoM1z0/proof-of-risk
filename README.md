@@ -28,6 +28,7 @@ The current implementation covers:
 
 ```bash
 npm install
+npx playwright install chromium
 npm run dev
 npm run simulate
 npm run verify
@@ -40,9 +41,11 @@ npm run check
 ```bash
 npm test
 npm run build
+npm run test:e2e
 ```
 
 `npm test` uses the project-local `.tmp/` directory for temporary files so the test suite is not blocked by a full system `/tmp` partition.
+`npm run test:e2e` starts a Vite preview server and runs Playwright Chromium checks against the production build; run `npx playwright install chromium` once on a new machine.
 
 ## Architecture
 

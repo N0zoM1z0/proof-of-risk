@@ -10,8 +10,9 @@
     "simulate": "tsx src/ai/simulate.ts",
     "verify": "tsx src/verify/cli.ts",
     "release:check": "tsx src/release/cli.ts",
-    "check": "npm test && npm run build && npm run simulate && npm run verify && npm run release:check",
+    "check": "npm test && npm run build && npm run test:e2e && npm run simulate && npm run verify && npm run release:check",
     "test": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest run",
+    "test:e2e": "mkdir -p .tmp && TMPDIR=$PWD/.tmp playwright test",
     "test:watch": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "@types/node": "^25.6.0",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",

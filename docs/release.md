@@ -15,6 +15,7 @@ Run:
 ```bash
 npm test
 npm run build
+npm run test:e2e
 npm run simulate
 npm run verify
 npm run release:check
