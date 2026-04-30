@@ -6,7 +6,9 @@ import {
   deriveRankings,
   evaluateAntiSybilSignals,
   JsonFileProofStorage,
+  JsonFileAppDatabase,
   MemoryProofStorage,
+  hashSessionToken,
   type PlayerProfile,
   type StoredMatch
 } from "../src/persistence";
@@ -82,6 +84,38 @@ describe("persistence, ranking, and anti-Sybil primitives", () => {
     const reloaded = new JsonFileProofStorage(filePath);
     expect(reloaded.getPlayer("player:a")?.displayName).toBe("Analyst");
     expect(reloaded.getMatch("match:json")?.settlement.winnerIds).toEqual(["player:b"]);
+  });
+
+  it("persists versioned app database accounts and sessions across reloads", () => {
+    const dir = join(process.cwd(), ".tmp", "app-db-tests");
+    const filePath = join(dir, "proof-app-db.json");
+    rmSync(dir, { force: true, recursive: true });
+    mkdirSync(dir, { recursive: true });
+
+    const database = new JsonFileAppDatabase(filePath);
+    database.upsertPlayer(samplePlayers()[0] as PlayerProfile);
+    database.upsertAccount({
+      accountId: "account:player:a",
+      playerId: "player:a",
+      displayName: "Analyst",
+      createdAt: "2026-04-30T00:00:00.000Z",
+      virtualOnly: true
+    });
+    database.createSession({
+      sessionId: "session:a",
+      accountId: "account:player:a",
+      playerId: "player:a",
+      rawToken: "raw-token",
+      createdAt: "2026-04-30T00:00:00.000Z",
+      expiresAt: "2026-05-01T00:00:00.000Z"
+    });
+
+    const reloaded = new JsonFileAppDatabase(filePath);
+    expect(reloaded.snapshot().schemaVersion).toBe(1);
+    expect(reloaded.getAccountByPlayerId("player:a")?.accountId).toBe("account:player:a");
+    expect(reloaded.findValidSessionByToken("raw-token", "2026-04-30T01:00:00.000Z")?.playerId).toBe("player:a");
+    expect(reloaded.findValidSessionByToken("raw-token", "2026-05-02T00:00:00.000Z")).toBeUndefined();
+    expect(reloaded.listSessions()[0]?.tokenHash).toBe(hashSessionToken("raw-token"));
   });
 
   it("derives deterministic rankings from stored virtual settlements", () => {

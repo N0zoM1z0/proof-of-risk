@@ -1,7 +1,7 @@
 import type { Server as HttpServer } from "node:http";
 import { WebSocketServer, type WebSocket } from "ws";
 import type { RoomAction, RoomSnapshot } from "../multiplayer/rooms";
-import type { ProofServerContext } from "./app";
+import { authenticateToken, type ProofServerContext } from "./app";
 
 export type ClientRoomMessage =
   | {
@@ -14,6 +14,7 @@ export type ClientRoomMessage =
       type: "action";
       roomId: string;
       action: RoomAction;
+      sessionToken?: string;
       requestId?: string;
     }
   | {
@@ -133,6 +134,16 @@ function handleAction(
   subscriptions: Map<WebSocket, ClientSubscription>,
   message: Extract<ClientRoomMessage, { type: "action" }>
 ) {
+  if (!authenticateToken(context, message.sessionToken)) {
+    send(socket, {
+      type: "ack",
+      accepted: false,
+      roomId: message.roomId,
+      errors: ["A valid sessionToken is required"],
+      requestId: message.requestId
+    });
+    return;
+  }
   const result = context.rooms.submitAction(message.roomId, message.action);
   if (!result.accepted) {
     send(socket, {

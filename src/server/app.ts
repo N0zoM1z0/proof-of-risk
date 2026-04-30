@@ -1,8 +1,8 @@
-import { createHash, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { URL } from "node:url";
 import { InMemoryRoomServer } from "../multiplayer/rooms";
-import { deriveRankings, MemoryProofStorage, type PlayerProfile, type ProofStorage } from "../persistence";
+import { deriveRankings, MemoryAppDatabase, type PlayerProfile } from "../persistence";
 import type {
   ApiFailure,
   ApiResponse,
@@ -18,24 +18,27 @@ import type {
 
 export type ProofServerContext = {
   rooms: InMemoryRoomServer;
-  storage: ProofStorage;
+  storage: MemoryAppDatabase;
   now: () => Date;
   issueToken: () => string;
+  sessionTtlMs: number;
 };
 
 export type ProofServerOptions = {
   rooms?: InMemoryRoomServer;
-  storage?: ProofStorage;
+  storage?: MemoryAppDatabase;
   now?: () => Date;
   issueToken?: () => string;
+  sessionTtlMs?: number;
 };
 
 export function createProofServerContext(options: ProofServerOptions = {}): ProofServerContext {
   return {
     rooms: options.rooms ?? new InMemoryRoomServer(),
-    storage: options.storage ?? new MemoryProofStorage(),
+    storage: options.storage ?? new MemoryAppDatabase(),
     now: options.now ?? (() => new Date()),
-    issueToken: options.issueToken ?? (() => randomUUID())
+    issueToken: options.issueToken ?? (() => randomUUID()),
+    sessionTtlMs: options.sessionTtlMs ?? 24 * 60 * 60 * 1000
   };
 }
 
@@ -84,15 +87,41 @@ export async function handleProofRequest(
       createdAt: context.now().toISOString(),
       virtualOnly: true
     };
+    const accountId = `account:${playerId}`;
+    const now = context.now();
+    const expiresAt = new Date(now.getTime() + context.sessionTtlMs).toISOString();
+    const token = `por_${context.issueToken()}`;
     context.storage.upsertPlayer(profile);
-    sendJson<SessionResponse>(response, 201, {
+    context.storage.upsertAccount({
+      accountId,
       playerId,
       displayName,
-      token: createSessionToken(context.issueToken(), playerId)
+      createdAt: now.toISOString(),
+      virtualOnly: true
+    });
+    context.storage.createSession({
+      sessionId: `session:${context.issueToken()}`,
+      accountId,
+      playerId,
+      rawToken: token,
+      createdAt: now.toISOString(),
+      expiresAt
+    });
+    sendJson<SessionResponse>(response, 201, {
+      accountId,
+      playerId,
+      displayName,
+      token,
+      expiresAt
     });
     return;
   }
   if (method === "POST" && url.pathname === "/rooms") {
+    const authFailure = requireSession(context, request);
+    if (authFailure) {
+      sendJson(response, 401, authFailure);
+      return;
+    }
     const body = await readJson<CreateRoomRequest>(request);
     if (!body.roomId || !body.hostPlayerId || !body.config) {
       sendJson(response, 400, failure("invalid_request", "roomId, hostPlayerId, and config are required"));
@@ -109,6 +138,11 @@ export async function handleProofRequest(
 
   const roomJoin = url.pathname.match(/^\/rooms\/([^/]+)\/join$/);
   if (method === "POST" && roomJoin) {
+    const authFailure = requireSession(context, request);
+    if (authFailure) {
+      sendJson(response, 401, authFailure);
+      return;
+    }
     const body = await readJson<JoinRoomRequest>(request);
     const playerId = asNonEmptyString(body.playerId);
     if (!playerId) {
@@ -126,6 +160,11 @@ export async function handleProofRequest(
 
   const roomAction = url.pathname.match(/^\/rooms\/([^/]+)\/actions$/);
   if (method === "POST" && roomAction) {
+    const authFailure = requireSession(context, request);
+    if (authFailure) {
+      sendJson(response, 401, authFailure);
+      return;
+    }
     const body = await readJson<SubmitActionRequest>(request);
     if (!body.action) {
       sendJson(response, 400, failure("invalid_request", "action is required"));
@@ -201,7 +240,24 @@ function asNonEmptyString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim().length > 0 ? value : undefined;
 }
 
-function createSessionToken(rawToken: string, playerId: string): string {
-  const digest = createHash("sha256").update(`${playerId}:${rawToken}`).digest("hex").slice(0, 16);
-  return `dev_${digest}_${rawToken}`;
+export function authenticateRequest(context: ProofServerContext, request: IncomingMessage): string | undefined {
+  const authorization = request.headers.authorization;
+  const token = authorization?.startsWith("Bearer ") ? authorization.slice("Bearer ".length).trim() : undefined;
+  if (!token) {
+    return undefined;
+  }
+  return context.storage.findValidSessionByToken(token, context.now().toISOString())?.playerId;
+}
+
+export function authenticateToken(context: ProofServerContext, token: string | undefined): string | undefined {
+  if (!token) {
+    return undefined;
+  }
+  return context.storage.findValidSessionByToken(token, context.now().toISOString())?.playerId;
+}
+
+function requireSession(context: ProofServerContext, request: IncomingMessage): ApiFailure | undefined {
+  return authenticateRequest(context, request)
+    ? undefined
+    : failure("unauthorized", "A valid Bearer session token is required");
 }

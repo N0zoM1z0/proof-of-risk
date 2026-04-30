@@ -37,6 +37,15 @@ afterEach(async () => {
 
 describe("WebSocket room protocol", () => {
   it("syncs room snapshots across two subscribed clients", async () => {
+    const sessionToken = "ws-session-token";
+    context.storage.createSession({
+      sessionId: "session:ws",
+      accountId: "account:player:auditor",
+      playerId: "player:auditor",
+      rawToken: sessionToken,
+      createdAt: "2026-04-30T00:00:00.000Z",
+      expiresAt: "2026-05-01T00:00:00.000Z"
+    });
     const seed = "ws-ballot";
     const gameId = "ws-ballot-game";
     const voters = Array.from({ length: 9 }, (_, index) => `voter:${index + 1}`);
@@ -85,6 +94,7 @@ describe("WebSocket room protocol", () => {
         type: "action",
         roomId: "ws-room",
         requestId: "vote-1",
+        sessionToken,
         action: {
           type: "COMMIT_VOTE",
           playerId: voterId,

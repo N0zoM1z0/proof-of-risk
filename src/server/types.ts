@@ -29,9 +29,11 @@ export type CreateSessionRequest = {
 };
 
 export type SessionResponse = {
+  accountId: string;
   playerId: string;
   displayName: string;
   token: string;
+  expiresAt: string;
 };
 
 export type CreateRoomRequest = {

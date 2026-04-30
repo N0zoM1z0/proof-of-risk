@@ -27,13 +27,17 @@ afterEach(async () => {
 
 describe("HTTP proof server", () => {
   it("serves health, sessions, room lifecycle, actions, snapshots, and rankings", async () => {
+    let token = "";
     await expectJson("GET", "/health", undefined, 200, (body) => {
       expect(body.data.status).toBe("ok");
     });
 
     await expectJson("POST", "/sessions", { playerId: "player:auditor", displayName: "Auditor" }, 201, (body) => {
+      expect(body.data.accountId).toBe("account:player:auditor");
       expect(body.data.playerId).toBe("player:auditor");
-      expect(body.data.token).toMatch(/^dev_/);
+      expect(body.data.token).toMatch(/^por_/);
+      expect(body.data.expiresAt).toBe("2026-05-01T00:00:00.000Z");
+      token = body.data.token;
     });
 
     const seed = "server-ballot";
@@ -57,12 +61,13 @@ describe("HTTP proof server", () => {
       201,
       (body) => {
         expect(body.data.snapshot.status).toBe("open");
-      }
+      },
+      token
     );
 
     await expectJson("POST", "/rooms/server-room/join", { playerId: players[1] }, 200, (body) => {
       expect(body.data.snapshot.status).toBe("active");
-    });
+    }, token);
 
     const choices: RpsMove[] = ["rock", "paper", "paper", "scissors", "rock", "paper", "scissors", "paper", "rock"];
     for (const [index, choice] of choices.entries()) {
@@ -78,7 +83,9 @@ describe("HTTP proof server", () => {
             payload: { voterId, commitment: makeBallotRpsCommitment(gameId, 0, voterId, choice, salt) }
           }
         },
-        200
+        200,
+        undefined,
+        token
       );
       await expectJson(
         "POST",
@@ -90,7 +97,9 @@ describe("HTTP proof server", () => {
             payload: { voterId, choice, salt }
           }
         },
-        200
+        200,
+        undefined,
+        token
       );
     }
 
@@ -112,9 +121,9 @@ describe("HTTP proof server", () => {
   });
 
   it("returns stable JSON errors for invalid requests", async () => {
-    await expectJson("POST", "/rooms/missing/actions", { action: { type: "NOPE", playerId: "p", payload: {} } }, 400, (body) => {
+    await expectJson("POST", "/rooms/missing/actions", { action: { type: "NOPE", playerId: "p", payload: {} } }, 401, (body) => {
       expect(body.ok).toBe(false);
-      expect(body.error.code).toBe("room_rejected");
+      expect(body.error.code).toBe("unauthorized");
     });
     await expectJson("GET", "/missing", undefined, 404, (body) => {
       expect(body.ok).toBe(false);
@@ -128,11 +137,15 @@ async function expectJson(
   path: string,
   body: unknown,
   expectedStatus: number,
-  assertBody?: (body: any) => void
+  assertBody?: (body: any) => void,
+  token?: string
 ) {
   const response = await fetch(`${baseUrl}${path}`, {
     method,
-    headers: body === undefined ? undefined : { "content-type": "application/json" },
+    headers: {
+      ...(body === undefined ? {} : { "content-type": "application/json" }),
+      ...(token ? { authorization: `Bearer ${token}` } : {})
+    },
     body: body === undefined ? undefined : JSON.stringify(body)
   });
   expect(response.status).toBe(expectedStatus);
