@@ -29,3 +29,41 @@ test("browser interactions update ruleset-driven controls", async ({ page }) => 
   await expect(page.getByLabel("Filtered gamble catalog").getByRole("button")).toHaveCount(5);
   await expect(page.getByLabel("Filtered gamble catalog").getByRole("button", { name: /All-pay Vote Auction/ })).toBeVisible();
 });
+
+test("room flow completes a browser-driven Ballot RPS match", async ({ page }) => {
+  await page.goto("/");
+
+  const roomFlow = page.locator("section.roomFlow");
+  await expect(roomFlow.getByRole("heading", { name: "Room Flow Console" })).toBeVisible();
+  await expect(page.getByTestId("room-flow-status")).toContainText("idle");
+
+  await roomFlow.getByRole("button", { name: "Create room" }).click();
+  await expect(page.getByTestId("room-flow-status")).toContainText("open");
+
+  await roomFlow.getByRole("button", { name: "Join NPC" }).click();
+  await expect(page.getByTestId("room-flow-status")).toContainText("active");
+
+  await roomFlow.getByRole("button", { name: "Run voter commit/reveal" }).click();
+  await expect(page.getByTestId("room-flow-status")).toContainText("playCommit");
+  await expect(page.getByTestId("room-flow-pending")).toHaveText("0");
+
+  await roomFlow.getByRole("button", { name: "Commit plays" }).click();
+  await expect(page.getByTestId("room-flow-status")).toContainText("playReveal");
+  await expect(page.getByTestId("room-flow-pending")).toHaveText("2");
+
+  await roomFlow.getByRole("button", { name: "Reveal plays" }).click();
+  await expect(page.getByTestId("room-flow-status")).toContainText("settled");
+  await expect(page.getByTestId("room-flow-settlement")).toContainText(/wins by revealed RPS comparison|Tie reveal/);
+});
+
+test("room flow surfaces invalid actor errors without breaking the flow", async ({ page }) => {
+  await page.goto("/");
+
+  const roomFlow = page.locator("section.roomFlow");
+  await roomFlow.getByRole("button", { name: "Create room" }).click();
+  await roomFlow.getByRole("button", { name: "Try invalid actor" }).click();
+
+  await expect(page.getByTestId("room-flow-error")).toContainText("Actor is not allowed in this room");
+  await roomFlow.getByRole("button", { name: "Join NPC" }).click();
+  await expect(page.getByTestId("room-flow-status")).toContainText("active");
+});

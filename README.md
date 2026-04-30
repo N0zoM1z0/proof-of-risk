@@ -24,6 +24,7 @@ The current implementation covers:
 - Phase 17 from roadmap issue #3: standalone HTTP server API for health, sessions, rooms, actions, snapshots, and rankings.
 - Phase 18 from roadmap issue #3: WebSocket room protocol for subscriptions, command acknowledgements, and multi-client snapshot broadcasts.
 - Phase 19 from roadmap issue #3: versioned app database schema plus account/session records and session-gated mutating APIs.
+- Phase 21 from roadmap issue #3: Playwright coverage for the complete room flow and invalid actor failure path.
 
 ## IP and Compliance Boundary
 
