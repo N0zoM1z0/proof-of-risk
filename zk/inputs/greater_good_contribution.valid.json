@@ -1,0 +1,11 @@
+{
+  "tax": 3,
+  "personal": 2,
+  "salt": 12345,
+  "coinsPerRound": 5,
+  "sumTax": 15,
+  "alivePlayerCount": 5,
+  "publicReturn": 6,
+  "returnRemainder": 0,
+  "commitment": 1234523
+}

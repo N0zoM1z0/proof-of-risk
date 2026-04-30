@@ -20,6 +20,7 @@ The current implementation covers:
 - Phase 13 from roadmap issue #2: Playwright production-preview browser interaction tests.
 - Phase 14 from roadmap issue #2: local in-memory multiplayer room protocol for routed ruleset actions.
 - Phase 15 from roadmap issue #2: storage, profile, deterministic ranking, and placeholder anti-Sybil primitives.
+- Phase 16 from roadmap issue #2: optional Circom/snarkjs Greater Good contribution ZK POC.
 
 ## IP and Compliance Boundary
 
@@ -37,6 +38,7 @@ npm run simulate
 npm run verify
 npm run release:check
 npm run check
+npm run zk:poc
 ```
 
 ## Verification
@@ -71,7 +73,8 @@ Phase 0 establishes reusable engine primitives:
 - `src/multiplayer/rooms.ts`: in-memory room create/join/leave/submit/snapshot protocol for local multiplayer flows.
 - `src/persistence/`: storage abstractions, memory/JSON implementations, ranking derivation, and anti-Sybil placeholder signals.
 - `src/verify/`: replay artifact export, hash/log/commitment verifier, genesis replay verifier, and CLI verifier.
-- `src/zk/proofTypes.ts`: optional ZK POC target metadata kept outside the normal runtime path.
+- `src/zk/`: optional ZK POC target metadata and fallback witness constraint checks kept outside the normal runtime path.
+- `zk/circom/`: optional Circom POC circuit for Greater Good contribution constraints.
 - `src/release/`: release report generator and CLI checks.
 - `fixtures/replays/manifest.json`: stable replay hashes for regression checks.
 - `docs/release.md` and `docs/compliance.md`: release scope, known limitations, and virtual-game compliance boundary.
@@ -99,4 +102,4 @@ The React UI in `src/App.tsx` displays foundation demo state and catalog data. I
 
 ## Next Interfaces
 
-Next work should move from MVP scaffolding to optional ZK proof tooling, transport-level multiplayer, and deeper balance tuning.
+Next work should move from MVP scaffolding to transport-level multiplayer, production ZK commitment design, and deeper balance tuning.

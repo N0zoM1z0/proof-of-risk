@@ -12,14 +12,15 @@ export type ZkPocStatus = {
 export const greaterGoodContributionPoc: ZkPocStatus = {
   target: "greater-good-contribution",
   optional: true,
-  toolchain: "unselected",
-  publicInputs: ["gameId", "round", "commitmentRoot", "sumTax", "publicReturn", "alivePlayerCount"],
+  toolchain: "circom-snarkjs",
+  publicInputs: ["coinsPerRound", "sumTax", "alivePlayerCount", "publicReturn", "returnRemainder", "commitment"],
   privateWitness: ["tax_i", "personal_i", "salt_i"],
   constraints: [
     "0 <= tax_i <= 5",
     "0 <= personal_i <= 5",
     "tax_i + personal_i = 5",
-    "commit_i = hash(tax_i, personal_i, salt_i)",
-    "publicReturn = ceil(sumTax * 2 / alivePlayerCount)"
+    "commit_i = phase16_demo_commit(tax_i, personal_i, salt_i)",
+    "publicReturn * alivePlayerCount = sumTax * 2 + returnRemainder",
+    "0 <= returnRemainder < alivePlayerCount"
   ]
 };

@@ -13,7 +13,8 @@
     "check": "npm test && npm run build && npm run test:e2e && npm run simulate && npm run verify && npm run release:check",
     "test": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest run",
     "test:e2e": "mkdir -p .tmp && TMPDIR=$PWD/.tmp playwright test",
-    "test:watch": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest"
+    "test:watch": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest",
+    "zk:poc": "node scripts/run-zk-poc.mjs"
   },
   "dependencies": {
     "@noble/hashes": "^1.7.1",

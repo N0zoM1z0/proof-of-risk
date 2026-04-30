@@ -8,6 +8,7 @@
 - Shared NPC archetypes, difficulty policies, deterministic simulation metrics, replay artifact verifier, and genesis replay verifier.
 - Local in-memory room protocol for create/join/leave/submit/snapshot multiplayer flows.
 - Storage primitives for virtual profiles, matches, replay artifacts, deterministic rankings, and explicit anti-Sybil placeholders.
+- Optional Circom/snarkjs Greater Good contribution ZK POC that is excluded from normal app checks.
 - 2.5D CSS/React visual slice with academy map, perspective table, motion, reduced-motion support, and smoke tests.
 
 ## Release Checks
@@ -26,5 +27,5 @@ npm run release:check
 ## Known Limitations
 
 - Browser interaction coverage is still smoke-level and should be expanded with Playwright.
-- ZK proof tooling is documented as optional and is not required for normal development.
+- ZK proof tooling is optional; the Phase 16 circuit uses a demo algebraic commitment, not a production cryptographic hash.
 - Networked multiplayer transport, cross-device sync, and production-grade anti-sybil enforcement remain out of scope for this MVP.
