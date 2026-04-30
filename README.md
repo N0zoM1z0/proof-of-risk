@@ -22,6 +22,7 @@ The current implementation covers:
 - Phase 15 from roadmap issue #2: storage, profile, deterministic ranking, and placeholder anti-Sybil primitives.
 - Phase 16 from roadmap issue #2: optional Circom/snarkjs Greater Good contribution ZK POC.
 - Phase 17 from roadmap issue #3: standalone HTTP server API for health, sessions, rooms, actions, snapshots, and rankings.
+- Phase 18 from roadmap issue #3: WebSocket room protocol for subscriptions, command acknowledgements, and multi-client snapshot broadcasts.
 
 ## IP and Compliance Boundary
 
@@ -75,6 +76,7 @@ Phase 0 establishes reusable engine primitives:
 - `src/multiplayer/rooms.ts`: in-memory room create/join/leave/submit/snapshot protocol for local multiplayer flows.
 - `src/persistence/`: storage abstractions, memory/JSON implementations, ranking derivation, and anti-Sybil placeholder signals.
 - `src/server/`: standalone Node HTTP API server with stable JSON response envelopes for local/dev multiplayer integration.
+- `src/server/ws.ts`: WebSocket room sync protocol layered onto the HTTP server at `/ws`.
 - `src/verify/`: replay artifact export, hash/log/commitment verifier, genesis replay verifier, and CLI verifier.
 - `src/zk/`: optional ZK POC target metadata and fallback witness constraint checks kept outside the normal runtime path.
 - `zk/circom/`: optional Circom POC circuit for Greater Good contribution constraints.

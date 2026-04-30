@@ -30,21 +30,32 @@ export type ProofServerOptions = {
   issueToken?: () => string;
 };
 
-export function createProofServer(options: ProofServerOptions = {}) {
-  const context: ProofServerContext = {
+export function createProofServerContext(options: ProofServerOptions = {}): ProofServerContext {
+  return {
     rooms: options.rooms ?? new InMemoryRoomServer(),
     storage: options.storage ?? new MemoryProofStorage(),
     now: options.now ?? (() => new Date()),
     issueToken: options.issueToken ?? (() => randomUUID())
   };
+}
+
+export function createProofServer(options: ProofServerOptions = {}) {
+  return createProofHttpServer(createProofServerContext(options));
+}
+
+export function createProofHttpServer(context: ProofServerContext) {
   return createServer((request, response) => {
-    handleRequest(context, request, response).catch((error: unknown) => {
+    handleProofRequest(context, request, response).catch((error: unknown) => {
       sendJson(response, 500, failure("internal_error", error instanceof Error ? error.message : "Unexpected error"));
     });
   });
 }
 
-async function handleRequest(context: ProofServerContext, request: IncomingMessage, response: ServerResponse) {
+export async function handleProofRequest(
+  context: ProofServerContext,
+  request: IncomingMessage,
+  response: ServerResponse
+) {
   const method = request.method ?? "GET";
   const url = new URL(request.url ?? "/", "http://127.0.0.1");
   if (method === "OPTIONS") {
