@@ -26,6 +26,7 @@ The current implementation covers:
 - Phase 19 from roadmap issue #3: versioned app database schema plus account/session records and session-gated mutating APIs.
 - Phase 21 from roadmap issue #3: Playwright coverage for the complete room flow and invalid actor failure path.
 - Phase 22 from roadmap issue #3: bounded HTTP/WebSocket load and protocol resilience harness.
+- Phase 23 from roadmap issue #3: optional Circom/snarkjs Groth16 prove/verify workflow for the ZK POC.
 
 ## IP and Compliance Boundary
 
@@ -46,6 +47,7 @@ npm run verify
 npm run release:check
 npm run check
 npm run zk:poc
+npm run zk:prove
 ```
 
 ## Verification

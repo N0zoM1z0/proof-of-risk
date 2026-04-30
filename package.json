@@ -16,7 +16,8 @@
     "test": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest run",
     "test:e2e": "mkdir -p .tmp && TMPDIR=$PWD/.tmp playwright test",
     "test:watch": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest",
-    "zk:poc": "node scripts/run-zk-poc.mjs"
+    "zk:poc": "node scripts/run-zk-poc.mjs",
+    "zk:prove": "node scripts/run-zk-prove.mjs"
   },
   "dependencies": {
     "@noble/hashes": "^1.7.1",
