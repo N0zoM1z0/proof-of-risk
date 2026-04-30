@@ -17,6 +17,8 @@ The current implementation covers:
 - Phase 10 from roadmap issue #2: project-local test temp isolation and one-command release check.
 - Phase 11 from roadmap issue #2: verifier genesis replay for formal MVP rulesets.
 - Phase 12 from roadmap issue #2: formal expansion rulesets for all-pay auction and non-transitive dice.
+- Phase 13 from roadmap issue #2: Playwright production-preview browser interaction tests.
+- Phase 14 from roadmap issue #2: local in-memory multiplayer room protocol for routed ruleset actions.
 
 ## IP and Compliance Boundary
 
@@ -65,6 +67,7 @@ Phase 0 establishes reusable engine primitives:
 - `src/gambles/allPayAuction/`: sealed-bid all-pay vote auction ruleset with commit/reveal bids and all-pay settlement.
 - `src/gambles/nontransitiveDice/`: formal probability ruleset for counter-pick dice dominance cycles and deterministic rolls.
 - `src/ai/`: shared NPC archetypes, difficulty policy, deterministic simulation summaries, and CLI simulation entrypoint.
+- `src/multiplayer/rooms.ts`: in-memory room create/join/leave/submit/snapshot protocol for local multiplayer flows.
 - `src/verify/`: replay artifact export, hash/log/commitment verifier, genesis replay verifier, and CLI verifier.
 - `src/zk/proofTypes.ts`: optional ZK POC target metadata kept outside the normal runtime path.
 - `src/release/`: release report generator and CLI checks.
@@ -94,4 +97,4 @@ The React UI in `src/App.tsx` displays foundation demo state and catalog data. I
 
 ## Next Interfaces
 
-Next work should move from MVP scaffolding to hardening: browser interaction tests, multiplayer room protocol, persistence, and deeper balance tuning.
+Next work should move from MVP scaffolding to persistence, account/ranking primitives, optional ZK proof tooling, and deeper balance tuning.

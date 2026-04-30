@@ -6,6 +6,7 @@
 - Runtime-safe gamble catalog and Gamble Lab.
 - Playable deterministic slices: Ballot RPS, Zero Nim, Greater Good, All-pay Vote Auction, and Non-transitive Dice.
 - Shared NPC archetypes, difficulty policies, deterministic simulation metrics, replay artifact verifier, and genesis replay verifier.
+- Local in-memory room protocol for create/join/leave/submit/snapshot multiplayer flows.
 - 2.5D CSS/React visual slice with academy map, perspective table, motion, reduced-motion support, and smoke tests.
 
 ## Release Checks
@@ -25,4 +26,4 @@ npm run release:check
 
 - Browser interaction coverage is still smoke-level and should be expanded with Playwright.
 - ZK proof tooling is documented as optional and is not required for normal development.
-- Multiplayer networking, persistence, accounts, room sync, rankings, and anti-sybil systems remain out of scope for this MVP.
+- Networked multiplayer transport, persistence, accounts, cross-device sync, rankings, and anti-sybil systems remain out of scope for this MVP.
