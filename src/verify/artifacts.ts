@@ -1,5 +1,7 @@
+import { runAllPayAuctionDemo } from "../gambles/allPayAuction/demo";
 import { runBallotRpsDemo } from "../gambles/ballotRps/demo";
 import { runGreaterGoodDemo } from "../gambles/greaterGood/demo";
+import { runNontransitiveDiceDemo } from "../gambles/nontransitiveDice/demo";
 import { runZeroNimDemo } from "../gambles/zeroNim/demo";
 import { createReplayEnvelope, computeReplayHash, type ReplayEnvelope } from "../engine/replay";
 import type { ActionRecord } from "../engine/actionLog";
@@ -35,6 +37,8 @@ export function exportDemoArtifacts(seed: string): ReplayArtifact[] {
   const ballot = runBallotRpsDemo(seed, "paper").state;
   const nim = runZeroNimDemo(seed, 3).state;
   const good = runGreaterGoodDemo(seed).state;
+  const auction = runAllPayAuctionDemo(seed).state;
+  const dice = runNontransitiveDiceDemo(seed, "ember").state;
   return [
     createReplayArtifact({
       gameId: ballot.gameId,
@@ -83,6 +87,37 @@ export function exportDemoArtifacts(seed: string): ReplayArtifact[] {
       randomLog: good.randomLog,
       commitments: good.commitments,
       settlementHash: good.publicState.result ? JSON.stringify(good.publicState.result) : undefined
+    }),
+    createReplayArtifact({
+      gameId: auction.gameId,
+      rulesetId: auction.rulesetId,
+      seed,
+      genesisConfig: {
+        gameId: auction.gameId,
+        seed,
+        players: auction.publicState.players,
+        budgets: auction.publicState.budgets,
+        votesAwarded: auction.publicState.votesAwarded
+      },
+      actionLog: auction.actionLog,
+      randomLog: auction.randomLog,
+      commitments: auction.commitments,
+      settlementHash: auction.publicState.result ? JSON.stringify(auction.publicState.result) : undefined
+    }),
+    createReplayArtifact({
+      gameId: dice.gameId,
+      rulesetId: dice.rulesetId,
+      seed,
+      genesisConfig: {
+        gameId: dice.gameId,
+        seed,
+        players: dice.publicState.players,
+        roundCount: dice.publicState.roundCount
+      },
+      actionLog: dice.actionLog,
+      randomLog: dice.randomLog,
+      commitments: dice.commitments,
+      settlementHash: dice.publicState.result ? JSON.stringify(dice.publicState.result) : undefined
     })
   ];
 }

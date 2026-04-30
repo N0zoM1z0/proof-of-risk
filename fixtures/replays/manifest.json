@@ -16,6 +16,16 @@
       "gameId": "greater-good-demo",
       "rulesetId": "greater-good.v1",
       "replayHash": "7def5e8db4b4cea21c8b9ee00ecf772d7e7f1359ec5159547e0eb5dde625fee4"
+    },
+    {
+      "gameId": "all-pay-auction-demo",
+      "rulesetId": "all-pay-auction.v1",
+      "replayHash": "4ec86495fd134381eaa656e459d96d64c82adceb642a02e7065ed886c833fa75"
+    },
+    {
+      "gameId": "nontransitive-dice-demo",
+      "rulesetId": "nontransitive-dice.v1",
+      "replayHash": "b4c8fa4d0bc3e487a891a149642ec6e839d38cdd23b9a712ea5b829ea66a2c41"
     }
   ]
 }

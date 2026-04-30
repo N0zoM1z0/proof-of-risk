@@ -14,6 +14,9 @@ The current implementation covers:
 - Phase 7 from roadmap issue #1: standalone replay artifact verifier plus optional ZK POC target notes.
 - Phase 8 from roadmap issue #1: expansion ruleset slices for all-pay vote auction and non-transitive dice.
 - Phase 9 from roadmap issue #1: regression replay fixtures, release report, compliance notes, and final packaging checks.
+- Phase 10 from roadmap issue #2: project-local test temp isolation and one-command release check.
+- Phase 11 from roadmap issue #2: verifier genesis replay for formal MVP rulesets.
+- Phase 12 from roadmap issue #2: formal expansion rulesets for all-pay auction and non-transitive dice.
 
 ## IP and Compliance Boundary
 
@@ -56,10 +59,10 @@ Phase 0 establishes reusable engine primitives:
 - `src/gambles/ballotRps/`: first playable ruleset, NPC heuristic, typed actions, and deterministic demo runner.
 - `src/gambles/zeroNim/`: second playable ruleset with betting, bust logic, NPC risk heuristics, and anomaly telemetry.
 - `src/gambles/greaterGood/`: public-goods ruleset with contribution/vote commitments, distribution, elimination, and archetype heuristics.
-- `src/gambles/allPayAuction/`: sealed-bid all-pay vote auction demo with commit/reveal bids.
-- `src/gambles/nontransitiveDice/`: probability tutorial for counter-pick dice dominance cycles.
+- `src/gambles/allPayAuction/`: sealed-bid all-pay vote auction ruleset with commit/reveal bids and all-pay settlement.
+- `src/gambles/nontransitiveDice/`: formal probability ruleset for counter-pick dice dominance cycles and deterministic rolls.
 - `src/ai/`: shared NPC archetypes, difficulty policy, deterministic simulation summaries, and CLI simulation entrypoint.
-- `src/verify/`: replay artifact export, hash/log/commitment verifier, and CLI verifier.
+- `src/verify/`: replay artifact export, hash/log/commitment verifier, genesis replay verifier, and CLI verifier.
 - `src/zk/proofTypes.ts`: optional ZK POC target metadata kept outside the normal runtime path.
 - `src/release/`: release report generator and CLI checks.
 - `fixtures/replays/manifest.json`: stable replay hashes for regression checks.
@@ -70,7 +73,7 @@ Phase 0 establishes reusable engine primitives:
 - `src/ui/GreaterGoodDemo.tsx`: UI surface for the public-goods match; contribution, voting, and settlement rules remain in the ruleset.
 - `src/ui/SimulationPanel.tsx`: UI snapshot for deterministic balance metrics.
 - `src/ui/VisualSlice.tsx`: native 2.5D visual frame for academy map, table, chip/card motion, and audit board.
-- `src/ui/ExpansionDemo.tsx`: UI surface for Phase 8 auction and dice tutorial slices.
+- `src/ui/ExpansionDemo.tsx`: UI surface for the auction and dice expansion rulesets.
 
 The React UI in `src/App.tsx` displays foundation demo state and catalog data. It does not implement settlement or game rules.
 
@@ -84,9 +87,8 @@ The React UI in `src/App.tsx` displays foundation demo state and catalog data. I
 ## Known Issues
 
 - The Phase 0 hash and RNG stack is development-grade. Later phases should add stronger domain separation and independent verifier fixtures.
-- No real gamble ruleset is implemented yet. Phase 1 adds the data-driven catalog and Phase 2 adds the first playable ruleset.
 - ZK circuits are intentionally out of the Phase 0 critical path.
 
 ## Next Interfaces
 
-Next work should move from MVP scaffolding to hardening: full ruleset re-execution in the verifier, browser interaction tests, multiplayer room protocol, and deeper balance tuning.
+Next work should move from MVP scaffolding to hardening: browser interaction tests, multiplayer room protocol, persistence, and deeper balance tuning.

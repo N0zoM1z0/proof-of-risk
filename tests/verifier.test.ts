@@ -7,14 +7,14 @@ describe("standalone replay verifier", () => {
   it("verifies exported demo artifacts", () => {
     const reports = exportDemoArtifacts("verify-seed").map(verifyReplayArtifact);
 
-    expect(reports).toHaveLength(3);
+    expect(reports).toHaveLength(5);
     expect(reports.every((report) => report.ok)).toBe(true);
   });
 
   it("replays formal MVP rulesets from genesis", () => {
     const reports = exportDemoArtifacts("genesis-seed").map(verifyGenesisReplay);
 
-    expect(reports).toHaveLength(3);
+    expect(reports).toHaveLength(5);
     expect(reports.every((report) => report.ok)).toBe(true);
     expect(reports.every((report) => report.replayedActionCount > 0)).toBe(true);
   });

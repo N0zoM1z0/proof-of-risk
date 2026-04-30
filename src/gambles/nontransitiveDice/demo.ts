@@ -1,7 +1,9 @@
-import { appendAction, type ActionRecord } from "../../engine/actionLog";
-import { DeterministicRng, type RandomRecord } from "../../engine/rng";
+import { DeterministicRng } from "../../engine/rng";
+import type { PlayerId } from "../../engine/stateMachine";
+import { counterPick, nontransitiveDiceRuleset } from "./ruleset";
+import type { DiceRound, DieId, NontransitiveDiceAction, NontransitiveDiceState } from "./types";
 
-export type DieId = "ember" | "granite" | "tide";
+export type { DieId };
 
 export type DiceDuelResult = {
   gameId: string;
@@ -9,85 +11,76 @@ export type DiceDuelResult = {
   seed: string;
   playerDie: DieId;
   dealerDie: DieId;
-  rounds: Array<{ round: number; playerRoll: number; dealerRoll: number; winner: "player" | "dealer" | "tie" }>;
+  players: [PlayerId, PlayerId];
+  roundCount: number;
+  rounds: DiceRound[];
   playerWins: number;
   dealerWins: number;
   lesson: string;
-  actionLog: ActionRecord[];
-  randomLog: RandomRecord[];
+  actionLog: NontransitiveDiceState["actionLog"];
+  randomLog: NontransitiveDiceState["randomLog"];
+  state: NontransitiveDiceState;
 };
 
-const dice: Record<DieId, number[]> = {
-  ember: [4, 4, 4, 4, 0, 0],
-  granite: [3, 3, 3, 3, 3, 3],
-  tide: [6, 6, 2, 2, 2, 2]
-};
-
-const counterPick: Record<DieId, DieId> = {
-  ember: "tide",
-  granite: "ember",
-  tide: "granite"
-};
+const players: [PlayerId, PlayerId] = ["player:auditor", "dealer:probability"];
 
 export function runNontransitiveDiceDemo(seed: string, playerDie: DieId = "ember"): DiceDuelResult {
   const rng = new DeterministicRng(seed);
   const gameId = "nontransitive-dice-demo";
-  const dealerDie = counterPick[playerDie];
-  let actionLog: ActionRecord[] = [];
-  actionLog = [
-    appendAction(actionLog, {
+  let state = nontransitiveDiceRuleset.init(
+    {
       gameId,
-      playerId: "player:auditor",
-      type: "PICK_DIE",
-      payload: { die: playerDie },
-      turn: 0
-    })
-  ];
-  actionLog = [
-    ...actionLog,
-    appendAction(actionLog, {
-      gameId,
-      playerId: "dealer:probability",
-      type: "COUNTER_PICK_DIE",
-      payload: { die: dealerDie },
-      turn: 1
-    })
-  ];
-  const rounds = Array.from({ length: 5 }, (_, index) => {
-    const playerRoll = rollDie(dice[playerDie], rng, `dice.player:${index}`);
-    const dealerRoll = rollDie(dice[dealerDie], rng, `dice.dealer:${index}`);
-    const winner: "player" | "dealer" | "tie" =
-      playerRoll === dealerRoll ? "tie" : playerRoll > dealerRoll ? "player" : "dealer";
-    actionLog = [
-      ...actionLog,
-      appendAction(actionLog, {
-        gameId,
-        playerId: "dealer:probability",
-        type: "ROLL_PAIR",
-        payload: { round: index + 1, playerRoll, dealerRoll, winner },
-        turn: actionLog.length
-      })
-    ];
-    return { round: index + 1, playerRoll, dealerRoll, winner };
+      seed,
+      players,
+      roundCount: 5
+    },
+    rng
+  );
+  state = applyOrThrow(state, {
+    type: "PICK_DIE",
+    playerId: players[0],
+    payload: { die: playerDie }
   });
-  const playerWins = rounds.filter((round) => round.winner === "player").length;
-  const dealerWins = rounds.filter((round) => round.winner === "dealer").length;
+  state = applyOrThrow(state, {
+    type: "COUNTER_PICK_DIE",
+    playerId: players[1],
+    payload: { die: counterPick[playerDie] }
+  });
+
+  for (let round = 1; round <= state.publicState.roundCount; round += 1) {
+    state = applyOrThrow(state, {
+      type: "ROLL_PAIR",
+      playerId: players[1],
+      payload: { round }
+    });
+  }
+
+  if (!state.publicState.dealerDie || !state.publicState.result) {
+    throw new Error("Non-transitive dice demo did not settle");
+  }
 
   return {
     gameId,
     rulesetId: "nontransitive-dice.v1",
     seed,
     playerDie,
-    dealerDie,
-    rounds,
-    playerWins,
-    dealerWins,
-    lesson: `${dealerDie} is the counter-pick to ${playerDie}; dominance cycles make second pick valuable.`,
-    actionLog,
-    randomLog: [...rng.randomLog]
+    dealerDie: state.publicState.dealerDie,
+    players,
+    roundCount: state.publicState.roundCount,
+    rounds: state.publicState.rounds,
+    playerWins: state.publicState.playerWins,
+    dealerWins: state.publicState.dealerWins,
+    lesson: `${state.publicState.dealerDie} is the counter-pick to ${playerDie}; dominance cycles make second pick valuable.`,
+    actionLog: state.actionLog,
+    randomLog: state.randomLog,
+    state
   };
-}
 
-function rollDie(sides: readonly number[], rng: DeterministicRng, label: string): number {
-  return sides[rng.nextInt(sides.length, label)] ?? 0;
+  function applyOrThrow(stateBefore: NontransitiveDiceState, action: NontransitiveDiceAction) {
+    const result = nontransitiveDiceRuleset.applyAction(stateBefore, action, rng);
+    if (!result.accepted) {
+      throw new Error(result.errors.join("; "));
+    }
+    return result.state;
+  }
 }

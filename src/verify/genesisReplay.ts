@@ -1,9 +1,13 @@
 import type { GambleRuleset } from "../engine/stateMachine";
 import { DeterministicRng } from "../engine/rng";
+import { allPayAuctionRuleset } from "../gambles/allPayAuction/ruleset";
+import type { AllPayAuctionAction, AllPayAuctionState } from "../gambles/allPayAuction/types";
 import { ballotRpsRuleset } from "../gambles/ballotRps/ruleset";
 import type { BallotRpsAction, BallotRpsState } from "../gambles/ballotRps/types";
 import { greaterGoodRuleset } from "../gambles/greaterGood/ruleset";
 import type { GreaterGoodAction, GreaterGoodState } from "../gambles/greaterGood/types";
+import { nontransitiveDiceRuleset } from "../gambles/nontransitiveDice/ruleset";
+import type { NontransitiveDiceAction, NontransitiveDiceState } from "../gambles/nontransitiveDice/types";
 import { zeroNimRuleset } from "../gambles/zeroNim/ruleset";
 import type { ZeroNimAction, ZeroNimState } from "../gambles/zeroNim/types";
 import { createReplayArtifact, type ReplayArtifact } from "./artifacts";
@@ -17,7 +21,16 @@ export type GenesisReplayReport = VerificationReport & {
 type FormalRuleset =
   | GambleRuleset<BallotRpsState, BallotRpsAction>
   | GambleRuleset<ZeroNimState, ZeroNimAction>
-  | GambleRuleset<GreaterGoodState, GreaterGoodAction>;
+  | GambleRuleset<GreaterGoodState, GreaterGoodAction>
+  | GambleRuleset<AllPayAuctionState, AllPayAuctionAction>
+  | GambleRuleset<NontransitiveDiceState, NontransitiveDiceAction>;
+
+type FormalState =
+  | BallotRpsState
+  | ZeroNimState
+  | GreaterGoodState
+  | AllPayAuctionState
+  | NontransitiveDiceState;
 
 export function verifyGenesisReplay(artifact: ReplayArtifact): GenesisReplayReport {
   const ruleset = selectRuleset(artifact.rulesetId);
@@ -38,7 +51,7 @@ export function verifyGenesisReplay(artifact: ReplayArtifact): GenesisReplayRepo
   }
 
   const rng = new DeterministicRng(artifact.seed);
-  let state = ruleset.init(artifact.genesisConfig, rng) as BallotRpsState | ZeroNimState | GreaterGoodState;
+  let state = ruleset.init(artifact.genesisConfig, rng) as FormalState;
   const issues: VerificationIssue[] = [];
 
   for (const record of artifact.actionLog) {
@@ -112,12 +125,18 @@ function selectRuleset(rulesetId: string): FormalRuleset | undefined {
   if (rulesetId === greaterGoodRuleset.id) {
     return greaterGoodRuleset;
   }
+  if (rulesetId === allPayAuctionRuleset.id) {
+    return allPayAuctionRuleset;
+  }
+  if (rulesetId === nontransitiveDiceRuleset.id) {
+    return nontransitiveDiceRuleset;
+  }
   return undefined;
 }
 
 function applyRecord(
   ruleset: FormalRuleset,
-  state: BallotRpsState | ZeroNimState | GreaterGoodState,
+  state: FormalState,
   record: ReplayArtifact["actionLog"][number],
   rng: DeterministicRng
 ) {

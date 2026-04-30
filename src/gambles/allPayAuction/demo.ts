@@ -1,11 +1,7 @@
-import { appendAction, type ActionRecord } from "../../engine/actionLog";
-import { createCommitment, revealCommitment, type CommitmentRecord } from "../../engine/commitments";
-import { DeterministicRng, type RandomRecord } from "../../engine/rng";
+import { DeterministicRng } from "../../engine/rng";
 import type { PlayerId, Settlement } from "../../engine/stateMachine";
-
-export type AuctionBid = {
-  bid: number;
-};
+import { allPayAuctionRuleset, makeAllPayAuctionCommitment } from "./ruleset";
+import type { AllPayAuctionState, AuctionBid } from "./types";
 
 export type AllPayAuctionResult = {
   gameId: string;
@@ -17,9 +13,10 @@ export type AllPayAuctionResult = {
   winnerId: PlayerId;
   votesAwarded: number;
   settlement: Settlement;
-  commitments: CommitmentRecord<AuctionBid>[];
-  actionLog: ActionRecord[];
-  randomLog: RandomRecord[];
+  commitments: AllPayAuctionState["commitments"];
+  actionLog: AllPayAuctionState["actionLog"];
+  randomLog: AllPayAuctionState["randomLog"];
+  state: AllPayAuctionState;
 };
 
 const players = ["bidder:analyst", "bidder:dominator", "bidder:auditor"];
@@ -30,78 +27,59 @@ const budgets: Record<PlayerId, number> = {
 };
 
 export function runAllPayAuctionDemo(seed: string): AllPayAuctionResult {
-  const rng = new DeterministicRng(seed);
   const gameId = "all-pay-auction-demo";
+  const rng = new DeterministicRng(seed);
+  const aiRng = new DeterministicRng(`${seed}:ai`);
   const bidPlan = Object.fromEntries(
     players.map((playerId, index) => [
       playerId,
       {
-        bid: Math.min(budgets[playerId] ?? 0, 2 + rng.nextInt(6, `auction.bidPlan:${index}`))
+        bid: Math.min(budgets[playerId] ?? 0, 2 + aiRng.nextInt(6, `auction.bidPlan:${index}`))
       }
     ])
   ) as Record<PlayerId, AuctionBid>;
-  let actionLog: ActionRecord[] = [];
-  const commitments: CommitmentRecord<AuctionBid>[] = [];
+  const salts = Object.fromEntries(players.map((playerId) => [playerId, saltFor(seed, playerId)]));
+  let state = allPayAuctionRuleset.init(
+    {
+      gameId,
+      seed,
+      players,
+      budgets,
+      votesAwarded: 100
+    },
+    rng
+  );
 
   for (const playerId of players) {
-    const salt = saltFor(seed, playerId);
-    const commitment = createCommitment(bidPlan[playerId], salt, { gameId, round: 1, playerId });
-    commitments.push({
-      id: commitment,
-      gameId,
-      round: 1,
+    const bid = bidPlan[playerId];
+    const salt = salts[playerId];
+    if (!bid || !salt) {
+      throw new Error(`Missing sealed bid for ${playerId}`);
+    }
+    const commitment = makeAllPayAuctionCommitment(gameId, 1, playerId, bid, salt);
+    state = applyOrThrow(state, {
+      type: "COMMIT_BID",
       playerId,
-      commitment,
-      scheme: "sha256-canonical-v1",
-      status: "committed",
-      createdAtTurn: actionLog.length
+      payload: { commitment }
     });
-    actionLog = [
-      ...actionLog,
-      appendAction(actionLog, {
-        gameId,
-        playerId,
-        type: "COMMIT_BID",
-        payload: { commitment },
-        turn: actionLog.length
-      })
-    ];
   }
 
-  const revealedBids: Record<PlayerId, number> = {};
-  const revealedCommitments = commitments.map((record) => {
-    const bid = bidPlan[record.playerId];
-    if (!bid) {
-      throw new Error(`Missing bid for ${record.playerId}`);
+  for (const playerId of players) {
+    const bid = bidPlan[playerId];
+    const salt = salts[playerId];
+    if (!bid || !salt) {
+      throw new Error(`Missing sealed bid reveal for ${playerId}`);
     }
-    const revealed = revealCommitment(record, bid, saltFor(seed, record.playerId), actionLog.length);
-    if (revealed.status !== "revealed") {
-      throw new Error(`Bid reveal failed for ${record.playerId}`);
-    }
-    revealedBids[record.playerId] = bid.bid;
-    actionLog = [
-      ...actionLog,
-      appendAction(actionLog, {
-        gameId,
-        playerId: record.playerId,
-        type: "REVEAL_BID",
-        payload: bid,
-        turn: actionLog.length
-      })
-    ];
-    return revealed;
-  });
+    state = applyOrThrow(state, {
+      type: "REVEAL_BID",
+      playerId,
+      payload: { ...bid, salt }
+    });
+  }
 
-  const winnerId = [...players].sort((left, right) => {
-    const bidDelta = (revealedBids[right] ?? 0) - (revealedBids[left] ?? 0);
-    return bidDelta !== 0 ? bidDelta : left.localeCompare(right);
-  })[0] as PlayerId;
-  const settlement: Settlement = {
-    terminal: true,
-    winnerIds: [winnerId],
-    balanceDeltas: Object.fromEntries(players.map((playerId) => [playerId, -(revealedBids[playerId] ?? 0)])),
-    reason: `${winnerId} wins 100 votes; every bidder pays their sealed bid`
-  };
+  if (!state.publicState.winnerId || !state.publicState.result) {
+    throw new Error("All-pay auction demo did not settle");
+  }
 
   return {
     gameId,
@@ -109,14 +87,23 @@ export function runAllPayAuctionDemo(seed: string): AllPayAuctionResult {
     seed,
     players,
     budgets,
-    revealedBids,
-    winnerId,
-    votesAwarded: 100,
-    settlement,
-    commitments: revealedCommitments,
-    actionLog,
-    randomLog: [...rng.randomLog]
+    revealedBids: state.publicState.revealedBids,
+    winnerId: state.publicState.winnerId,
+    votesAwarded: state.publicState.votesAwarded,
+    settlement: state.publicState.result,
+    commitments: state.commitments,
+    actionLog: state.actionLog,
+    randomLog: state.randomLog,
+    state
   };
+
+  function applyOrThrow(stateBefore: AllPayAuctionState, action: Parameters<typeof allPayAuctionRuleset.applyAction>[1]) {
+    const result = allPayAuctionRuleset.applyAction(stateBefore, action, rng);
+    if (!result.accepted) {
+      throw new Error(result.errors.join("; "));
+    }
+    return result.state;
+  }
 }
 
 function saltFor(seed: string, playerId: PlayerId): string {
