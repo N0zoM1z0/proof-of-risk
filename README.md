@@ -21,6 +21,7 @@ The current implementation covers:
 - Phase 14 from roadmap issue #2: local in-memory multiplayer room protocol for routed ruleset actions.
 - Phase 15 from roadmap issue #2: storage, profile, deterministic ranking, and placeholder anti-Sybil primitives.
 - Phase 16 from roadmap issue #2: optional Circom/snarkjs Greater Good contribution ZK POC.
+- Phase 17 from roadmap issue #3: standalone HTTP server API for health, sessions, rooms, actions, snapshots, and rankings.
 
 ## IP and Compliance Boundary
 
@@ -34,6 +35,7 @@ The current implementation covers:
 npm install
 npx playwright install chromium
 npm run dev
+npm run server
 npm run simulate
 npm run verify
 npm run release:check
@@ -72,6 +74,7 @@ Phase 0 establishes reusable engine primitives:
 - `src/ai/`: shared NPC archetypes, difficulty policy, deterministic simulation summaries, and CLI simulation entrypoint.
 - `src/multiplayer/rooms.ts`: in-memory room create/join/leave/submit/snapshot protocol for local multiplayer flows.
 - `src/persistence/`: storage abstractions, memory/JSON implementations, ranking derivation, and anti-Sybil placeholder signals.
+- `src/server/`: standalone Node HTTP API server with stable JSON response envelopes for local/dev multiplayer integration.
 - `src/verify/`: replay artifact export, hash/log/commitment verifier, genesis replay verifier, and CLI verifier.
 - `src/zk/`: optional ZK POC target metadata and fallback witness constraint checks kept outside the normal runtime path.
 - `zk/circom/`: optional Circom POC circuit for Greater Good contribution constraints.
