@@ -202,9 +202,9 @@ Current boundaries include:
 - The product is scoped to virtual gameplay only.
 - Real-money gambling, redeemable rewards, custodial value flows, and regulated betting features are out of scope without separate legal and compliance review.
 
-Additional detail lives in [docs/compliance.md](/dsk/hdd/home/llmft/Project/proof-of-risk/docs/compliance.md).
+Additional detail lives in [docs/compliance.md](docs/compliance.md).
 
 ## Additional Documentation
 
-- [docs/release.md](/dsk/hdd/home/llmft/Project/proof-of-risk/docs/release.md)
-- [docs/zk-poc.md](/dsk/hdd/home/llmft/Project/proof-of-risk/docs/zk-poc.md)
+- [docs/release.md](docs/release.md)
+- [docs/zk-poc.md](docs/zk-poc.md)
