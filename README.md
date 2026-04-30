@@ -25,6 +25,7 @@ The current implementation covers:
 - Phase 18 from roadmap issue #3: WebSocket room protocol for subscriptions, command acknowledgements, and multi-client snapshot broadcasts.
 - Phase 19 from roadmap issue #3: versioned app database schema plus account/session records and session-gated mutating APIs.
 - Phase 21 from roadmap issue #3: Playwright coverage for the complete room flow and invalid actor failure path.
+- Phase 22 from roadmap issue #3: bounded HTTP/WebSocket load and protocol resilience harness.
 
 ## IP and Compliance Boundary
 
@@ -40,6 +41,7 @@ npx playwright install chromium
 npm run dev
 npm run server
 npm run simulate
+npm run load:test
 npm run verify
 npm run release:check
 npm run check
@@ -79,6 +81,7 @@ Phase 0 establishes reusable engine primitives:
 - `src/persistence/`: storage abstractions, versioned app database, memory/JSON implementations, ranking derivation, and anti-Sybil placeholder signals.
 - `src/server/`: standalone Node HTTP API server with stable JSON response envelopes for local/dev multiplayer integration.
 - `src/server/ws.ts`: WebSocket room sync protocol layered onto the HTTP server at `/ws`.
+- `src/server/loadTest.ts`: bounded local load/resilience harness for concurrent HTTP and WebSocket room operations.
 - `src/verify/`: replay artifact export, hash/log/commitment verifier, genesis replay verifier, and CLI verifier.
 - `src/zk/`: optional ZK POC target metadata and fallback witness constraint checks kept outside the normal runtime path.
 - `zk/circom/`: optional Circom POC circuit for Greater Good contribution constraints.
