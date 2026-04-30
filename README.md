@@ -29,6 +29,7 @@ npm run dev
 npm run simulate
 npm run verify
 npm run release:check
+npm run check
 ```
 
 ## Verification
@@ -37,6 +38,8 @@ npm run release:check
 npm test
 npm run build
 ```
+
+`npm test` uses the project-local `.tmp/` directory for temporary files so the test suite is not blocked by a full system `/tmp` partition.
 
 ## Architecture
 

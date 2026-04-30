@@ -10,8 +10,9 @@
     "simulate": "tsx src/ai/simulate.ts",
     "verify": "tsx src/verify/cli.ts",
     "release:check": "tsx src/release/cli.ts",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "check": "npm test && npm run build && npm run simulate && npm run verify && npm run release:check",
+    "test": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest run",
+    "test:watch": "mkdir -p .tmp && TMPDIR=$PWD/.tmp vitest"
   },
   "dependencies": {
     "@noble/hashes": "^1.7.1",
