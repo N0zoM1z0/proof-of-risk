@@ -2,6 +2,8 @@
 
 `Proof of Risk: Academy Gambit` is a deterministic strategy-game prototype focused on replayable fairness, inspectable game state, and verifiable risk mechanics. The repository combines a React demo client, a standalone Node server, deterministic rulesets, replay verification, and an optional zero-knowledge proving research path.
 
+Online demo: https://n0zom1z0.github.io/proof-of-risk/
+
 ## Product Overview
 
 Proof of Risk is built around three product ideas:
