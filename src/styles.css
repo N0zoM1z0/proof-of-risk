@@ -16,6 +16,12 @@
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   min-width: 320px;
@@ -101,6 +107,7 @@ p {
 }
 
 .panel {
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 26px;
   padding: 24px;
@@ -146,6 +153,7 @@ select {
 }
 
 .facts div {
+  min-width: 0;
   display: grid;
   grid-template-columns: 140px 1fr;
   gap: 14px;
@@ -156,6 +164,7 @@ dt {
 }
 
 dd {
+  min-width: 0;
   margin: 0;
 }
 
@@ -184,6 +193,7 @@ dd {
 }
 
 pre {
+  min-width: 0;
   max-height: 280px;
   overflow: auto;
   margin: 0;
@@ -194,6 +204,7 @@ pre {
 }
 
 .lab {
+  min-width: 0;
   margin-top: 18px;
   border: 1px solid var(--line);
   border-radius: 34px;
@@ -204,6 +215,7 @@ pre {
 }
 
 .rpsDemo {
+  min-width: 0;
   margin-top: 18px;
   border: 1px solid var(--line);
   border-radius: 34px;
@@ -214,6 +226,7 @@ pre {
 }
 
 .roomFlow {
+  min-width: 0;
   margin-top: 18px;
   border: 1px solid var(--line);
   border-radius: 34px;
@@ -269,6 +282,7 @@ pre {
 }
 
 .nimDemo {
+  min-width: 0;
   margin-top: 18px;
   border: 1px solid var(--line);
   border-radius: 34px;
@@ -279,6 +293,7 @@ pre {
 }
 
 .goodDemo {
+  min-width: 0;
   margin-top: 18px;
   border: 1px solid var(--line);
   border-radius: 34px;
@@ -289,6 +304,7 @@ pre {
 }
 
 .simPanel {
+  min-width: 0;
   margin-top: 18px;
   border: 1px solid var(--line);
   border-radius: 34px;
@@ -299,6 +315,7 @@ pre {
 }
 
 .expansionDemo {
+  min-width: 0;
   margin-top: 18px;
   border: 1px solid var(--line);
   border-radius: 34px;
@@ -309,6 +326,7 @@ pre {
 }
 
 .visualSlice {
+  min-width: 0;
   margin: 18px 0;
   border: 1px solid var(--line);
   border-radius: 36px;
@@ -599,6 +617,7 @@ select:focus-visible {
 }
 
 .catalogDetail {
+  min-width: 0;
   min-height: 520px;
   border: 1px solid rgba(225, 185, 100, 0.24);
   border-radius: 24px;
@@ -619,6 +638,7 @@ select:focus-visible {
 }
 
 .detailFacts div {
+  min-width: 0;
   display: grid;
   grid-template-columns: 140px 1fr;
   gap: 14px;
@@ -669,6 +689,11 @@ select:focus-visible {
 
   .drawList {
     flex-wrap: wrap;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
 }
 

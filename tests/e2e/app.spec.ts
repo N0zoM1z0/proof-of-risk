@@ -67,3 +67,22 @@ test("room flow surfaces invalid actor errors without breaking the flow", async 
   await roomFlow.getByRole("button", { name: "Join NPC" }).click();
   await expect(page.getByTestId("room-flow-status")).toContainText("active");
 });
+
+test("mobile layout does not introduce horizontal overflow", async ({ page }) => {
+  await page.setViewportSize({ width: 393, height: 852 });
+  await page.goto("/");
+
+  await expect(page.getByRole("heading", { name: "Deterministic engine foundation" })).toBeVisible();
+  await expect(page.locator("section.rpsDemo").getByRole("heading", { name: "Ballot RPS" })).toBeVisible();
+  await expect(page.locator("section.roomFlow").getByRole("heading", { name: "Room Flow Console" })).toBeVisible();
+  await expect(page.locator("section.nimDemo").getByRole("heading", { name: "Zero Nim" })).toBeVisible();
+  await expect(page.locator("section.goodDemo").getByRole("heading", { name: "Greater Good" })).toBeVisible();
+  await expect(page.locator("section.expansionDemo").getByRole("heading", { name: "Auction and probability tutorials" })).toBeVisible();
+  await expect(page.locator("section.lab").getByRole("heading", { name: "Data-driven rules catalog" })).toBeVisible();
+
+  const overflow = await page.evaluate(() => {
+    const root = document.scrollingElement ?? document.documentElement;
+    return root.scrollWidth - root.clientWidth;
+  });
+  expect(overflow).toBeLessThanOrEqual(1);
+});
