@@ -237,6 +237,32 @@ pre {
     rgba(10, 16, 20, 0.8);
 }
 
+.networkRoom {
+  min-width: 0;
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 34px;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 82% 12%, rgba(90, 153, 122, 0.2), transparent 20rem),
+    linear-gradient(135deg, rgba(41, 91, 108, 0.24), transparent 36%),
+    rgba(8, 18, 17, 0.82);
+}
+
+.networkConfig {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0;
+}
+
+.networkConfig label {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  color: var(--muted);
+}
+
 .flowControls {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -666,6 +692,7 @@ select:focus-visible {
   .grid,
   .labHeader,
   .filters,
+  .networkConfig,
   .labGrid,
   .rpsGrid,
   .flowControls,

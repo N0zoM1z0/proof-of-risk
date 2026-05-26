@@ -99,6 +99,31 @@ To persist app data locally:
 PROOF_DB_FILE=.tmp/app-db.json npm run server
 ```
 
+### Run on a LAN
+
+Bind the backend and frontend preview to the machine's LAN address:
+
+```bash
+HOST=10.130.159.208 PORT=8787 PROOF_DB_FILE=.tmp/lan-app-db.json npm run server
+npm run build
+npm run preview -- --host 10.130.159.208 --port 4173
+```
+
+Then open:
+
+```text
+http://10.130.159.208:4173/
+```
+
+The `Network Room Console` uses the real server endpoints:
+
+```text
+http://10.130.159.208:8787
+ws://10.130.159.208:8787/ws
+```
+
+Use the console to create a session, create a room, join the NPC, subscribe over WebSocket, play votes, commit plays, and reveal plays. The local browser-only `Room Flow Console` remains available as a deterministic offline demo.
+
 ## Operational Commands
 
 ```bash

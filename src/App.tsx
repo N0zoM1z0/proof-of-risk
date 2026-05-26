@@ -4,6 +4,7 @@ import { BallotRpsDemo } from "./ui/BallotRpsDemo";
 import { ExpansionDemo } from "./ui/ExpansionDemo";
 import { GambleLab } from "./ui/GambleLab";
 import { GreaterGoodDemo } from "./ui/GreaterGoodDemo";
+import { NetworkRoomConsole } from "./ui/NetworkRoomConsole";
 import { RoomFlowDemo } from "./ui/RoomFlowDemo";
 import { SimulationPanel } from "./ui/SimulationPanel";
 import { VisualSlice } from "./ui/VisualSlice";
@@ -77,6 +78,7 @@ export default function App() {
 
       <VisualSlice />
       <BallotRpsDemo />
+      <NetworkRoomConsole />
       <RoomFlowDemo />
       <ZeroNimDemo />
       <GreaterGoodDemo />

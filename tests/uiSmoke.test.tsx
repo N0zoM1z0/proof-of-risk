@@ -16,6 +16,7 @@ describe("UI smoke coverage", () => {
     const html = renderToString(<App />);
 
     expect(html).toContain("Ballot RPS");
+    expect(html).toContain("Network Room Console");
     expect(html).toContain("Room Flow Console");
     expect(html).toContain("Zero Nim");
     expect(html).toContain("Greater Good");
